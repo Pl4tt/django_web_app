@@ -34,8 +34,8 @@ def get_profile_image_filepath(self, filename):
 
 class Account(AbstractBaseUser):
     email = models.EmailField(max_length=60, unique=True)
-    usernamme = models.CharField(max_length=25, unique=True)
-    date_joined = models.DateTimeField(verbose_name="date joined", auto_now_add=True)
+    username = models.CharField(max_length=25, unique=True)
+    date_created = models.DateTimeField(verbose_name="date created", auto_now_add=True)
     last_login = models.DateTimeField(verbose_name="last login", auto_now=True)
     profile_image = models.ImageField(max_length=255, upload_to=get_profile_image_filepath, null=True, blank=True, default=get_default_profile_image)
     hide_email = models.BooleanField(default=True)
@@ -47,7 +47,7 @@ class Account(AbstractBaseUser):
     is_superuser = models.BooleanField(default=False)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["email", "username"]
+    REQUIRED_FIELDS = ["username"]
 
     objects = AccountManager()
     

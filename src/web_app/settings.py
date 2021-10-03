@@ -27,6 +27,7 @@ SECRET_KEY = 'django-insecure-ww9swqr)1_ta-2@w6)%(#%14+@t-%4xc@m8qn8g@^0r)ksl=1l
 DEBUG = True
 
 ALLOWED_HOSTS = []
+AUTH_USER_MODEL = "account.Account"
 
 
 # Application definition
@@ -40,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "account",
-    "home",
+    "public_chat",
     "channels",
 ]
 
@@ -79,10 +80,15 @@ ASGI_APPLICATION = "web_app.routing.websocket_urlpatterns"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': DB_NAME,
+        'USER': DB_USER,
+        'PASSWORD': DB_PASSWORD,
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
