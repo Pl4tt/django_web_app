@@ -1,0 +1,68 @@
+{% extends "base.html" %} {% block title %}Home{% endblock title %}
+{% block content %}
+<style>
+	#id_chat_content {
+		background-color: var(--bs-dark);
+		resize: none;
+        border: none;
+        color: var(--main-text-color);
+	}
+</style>
+
+<div class="container">
+	<div class="row d-flex justify-content-center">
+		<div class="col-6">
+			<form onsubmit="return sendMessage();">
+				<div class="form-group">
+					<label for="id_chat_content" class="h4 pt-5">Public Chatroom</label>
+					<textarea
+						class="form-control shadow-lg p-3 mb-5"
+						id="id_chat_content"
+						rows="20"
+						readonly
+					></textarea>
+				</div>
+				<div class="input-group mb-3">
+					<input class="form-control shadow p-3 mb-5" id="id_message_input" type="text" />
+					<button type="submit" id="id_send_message" class="btn btn-outline-primary shadow p-3 mb-5">
+						<span class="material-icons"> send </span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+{{ request.user.username|json_script:"user_username" }}
+<script>
+
+    const user_username = JSON.parse(document.getElementById("user_username").textContent);
+    const chatSocket = new WebSocket(
+        "ws://" +
+        window.location.host +
+        "/ws/chat/public/"
+    )
+
+    function sendMessage() {
+        const messageInput = document.querySelector("#id_message_input");
+        const message = messageInput.value;
+
+        chatSocket.send(JSON.stringify({
+            "message": message,
+            "username": user_username
+        }))
+        messageInput.value = "";
+		return false;
+
+    }
+
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.message) {
+            document.querySelector("#id_chat_content").value += (data.username + ": " + data.message + "\n");
+        }
+    }
+</script>
+
+{% endblock content %}

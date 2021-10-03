@@ -41,7 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     "account",
-    "public_chat",
+    "chat",
     "channels",
 ]
 
@@ -74,12 +74,10 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'web_app.wsgi.application'
-ASGI_APPLICATION = "web_app.routing.websocket_urlpatterns"
 
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
 
 DATABASES = {
     'default': {
@@ -149,3 +147,11 @@ DATA_UPLOAD_MAX_MEMORY_SIZE = 10485760 # 10 MB
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+ASGI_APPLICATION = "web_app.routing.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+     }
+}
