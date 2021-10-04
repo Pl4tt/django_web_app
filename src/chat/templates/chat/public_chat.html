@@ -34,14 +34,24 @@
 </div>
 
 {{ request.user.username|json_script:"user_username" }}
+{{ messages|json_script:"messages" }}
 <script>
 
     const user_username = JSON.parse(document.getElementById("user_username").textContent);
+	const chatarea = document.querySelector("#id_chat_content");
     const chatSocket = new WebSocket(
         "ws://" +
         window.location.host +
         "/ws/chat/public/"
     )
+	var messages = JSON.parse(document.getElementById("messages").textContent);
+
+	function loadPage() {
+		for (message of messages) {
+			chatarea.value += (message + ": " + message + "\n")
+		}
+	}
+	loadPage();
 
     function sendMessage() {
         const messageInput = document.querySelector("#id_message_input");
@@ -60,7 +70,8 @@
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
         if (data.message) {
-            document.querySelector("#id_chat_content").value += (data.username + ": " + data.message + "\n");
+            chatarea.value += (data.username + ": " + data.message + "\n");
+			chatarea.scrollTop = chatarea.scrollHeight;
         }
     }
 </script>
