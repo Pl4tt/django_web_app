@@ -22,4 +22,21 @@
         --main-text-color: #f2f2f2;
         --light-primary-text-color: #0080ff;
     }
+    
+    /* scrollbar */
+    ::-webkit-scrollbar {
+        width: auto;
+    }
+    ::-webkit-scrollbar-track {
+		background: var(--bs-dark);
+	}
+    ::-webkit-scrollbar-thumb {
+        background: var(--bs-gray-600);
+        border: .15em solid var(--bs-dark);
+        border-radius: 10rem;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--bs-gray-500);
+        cursor: pointer;
+    }
 </style>
