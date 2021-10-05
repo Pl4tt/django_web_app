@@ -14,18 +14,33 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
-				<form class="d-flex" id="id_seach_form" onsubmit="return executeSearch();">
+				<form
+					class="d-flex"
+					id="id_seach_form"
+					onsubmit="return executeSearch();"
+				>
 					<input
 						id="id_search_bar"
-						class="form-control me-2"
+						class="form-control me-2 custom-dark-input"
 						type="search"
 						placeholder="Search"
 						aria-label="Search"
 					/>
-					<button id="id_seach_submit_button" class="btn btn-outline-success" type="submit">Search</button>
+					<button
+						id="id_seach_submit_button"
+						class="btn btn-outline-primary"
+						type="submit"
+					>
+						Search
+					</button>
 				</form>
 				<li class="nav-item">
-					<a class="nav-link active" aria-current="page" href="{% url 'public_chat' %}">Public Chat</a>
+					<a
+						class="nav-link active"
+						aria-current="page"
+						href="{% url 'public_chat' %}"
+						>Public Chat</a
+					>
 				</li>
 				<li class="nav-item">
 					<a class="nav-link" href="#">Link</a>
@@ -53,25 +68,47 @@
 				</li>
 			</ul>
 			<div class="btn-group dropstart">
-				<button class="btn btn-secondary dropdown-toggle" type="button" id="id_profile_image_dropdown_button" data-bs-toggle="dropdown" aria-expanded="false">
-					<img class="account-image rounded-circle m-auto d-block dropdown-toggle" id="id_profile_image_dropdown" src="{{request.user.profile_image.url}}" alt="p" width="40" height="40">
+			{% if request.user.is_authenticated %}
+				<button
+					class="btn btn-secondary dropdown-toggle"
+					type="button"
+					id="id_profile_image_dropdown_button"
+					data-bs-toggle="dropdown"
+					aria-expanded="false"
+				>
+					<img
+						class="account-image rounded-circle m-auto d-block dropdown-toggle"
+						id="id_profile_image_dropdown"
+						src="{{request.user.profile_image.url}}"
+						alt="p"
+						width="40"
+						height="40"
+					/>
 				</button>
-				<ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="id_profile_image_dropdown_button">
-				  <li><a class="dropdown-item" href="#">Account</a></li>
-				  <li><hr class="dropdown-divider"></li>
-				  <li><a class="dropdown-item" href="#">Settings</a></li>
-				  <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+				<ul
+					class="dropdown-menu dropdown-menu-dark"
+					aria-labelledby="id_profile_image_dropdown_button"
+				>
+					<li><a class="dropdown-item" href="#">Account</a></li>
+					<li><hr class="dropdown-divider" /></li>
+					<li><a class="dropdown-item" href="#">Settings</a></li>
+					<li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
 				</ul>
-			  </div>
+			{% else %}
+				<a class="btn btn-primary" href="{% url 'login' %}">Login</a>
+				<p style="visibility: hidden;">a</p>
+				<a class="btn btn-outline-primary" href="{% url 'register' %}">Register</a>
+			{% endif %}
+			</div>
 		</div>
 	</div>
 </nav>
 
 <script>
-    function executeSearch() {
-        query = document.getelementById("id_search_bar").value;
-        window.loaction.replace("#")
+	function executeSearch() {
+		query = document.getelementById("id_search_bar").value;
+		window.loaction.replace("#");
 
-        return false
-    }
+		return false;
+	}
 </script>
