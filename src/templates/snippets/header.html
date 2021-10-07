@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
 	<div class="container-fluid">
-		<a class="navbar-brand" href="{% url 'public_chat' %}">Home</a>
+		<a class="navbar-brand" href="{% url 'chat:public_chat' %}">Home</a>
 		<button
 			class="navbar-toggler"
 			type="button"
@@ -38,7 +38,7 @@
 					<a
 						class="nav-link active"
 						aria-current="page"
-						href="{% url 'public_chat' %}"
+						href="{% url 'chat:public_chat' %}"
 						>Public Chat</a
 					>
 				</li>
@@ -92,12 +92,12 @@
 					<li><a class="dropdown-item" href="#">Account</a></li>
 					<li><hr class="dropdown-divider" /></li>
 					<li><a class="dropdown-item" href="#">Settings</a></li>
-					<li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+					<li><a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a></li>
 				</ul>
 			{% else %}
-				<a class="btn btn-primary" href="{% url 'login' %}">Login</a>
+				<a class="btn btn-primary" href="{% url 'account:login' %}">Login</a>
 				<p style="visibility: hidden;">a</p>
-				<a class="btn btn-outline-primary" href="{% url 'register' %}">Register</a>
+				<a class="btn btn-outline-primary" href="{% url 'account:register' %}">Register</a>
 			{% endif %}
 			</div>
 		</div>
