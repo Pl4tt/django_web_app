@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout, login
 from django.http import HttpResponse
 
-from .forms import AccountAuthenticationForm
+from .forms import AccountAuthenticationForm, RegistrationForm
 
 
 
@@ -17,8 +17,25 @@ def get_redirect_if_exists(request):
 
 def registration_view(request, *args, **kwargs):
     context = {}
+
+    if request.user.is_authenticated:
+        return HttpResponse(f"You are already logged in as {request.user.username}.")
+
     if request.POST:
-        pass
+        form = RegistrationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            email = form.cleaned_data["email"]
+            password = form.cleaned_data["password1"]
+            account = authenticate(email=email, password=password)
+            login(request, account)
+
+            destination = get_redirect_if_exists(request)
+            if destination:
+                return redirect(destination)
+            return redirect("chat:public_chat")
+        else:
+            context["invalid_form"] = form
     return render(request, "account/registration.html", context)
 
 def login_view(request, *args, **kwargs):
@@ -40,7 +57,7 @@ def login_view(request, *args, **kwargs):
                     return redirect(destination)
                 return redirect("chat:public_chat")
         else:
-            context["wrong_form"] = form
+            context["invalid_form"] = form
 
     return render(request, "account/login.html", context)
 

@@ -15,27 +15,27 @@
         <div class="form-floating mb-3">
             <input type="email" class="form-control custom-dark-input" name="email" id="id_email" placeholder="Email Adress" required autocomplete="off">
             <label for="email">Email address</label>
-          </div>
-          <div class="form-floating">
+        </div>
+        <div class="form-floating">
             <input type="password" class="form-control custom-dark-input" name="password" id="id_password" placeholder="Password" required autocomplete="off">
             <label for="password">Password</label>
-          </div>
-          <br>
-          {% for field in wrong_form %}
-              <p>
-              {% for error in field.errors %}
-                  <p style="color: red">{{ error }}</p>
-              {% endfor %}
-              </p>
-          {% endfor %}
-          {% if wrong_form.non_field_errors %}
-              <div style="color: red">
-              <p>{{wrong_form.non_field_errors}}</p>
-              </div>
-          {% endif %}
-          <button class="btn btn-primary" type="submit">Login</button>
+        </div>
+        <br>
+        {% for field in invalid_form %}
+            <p>
+            {% for error in field.errors %}
+                <p style="color: red">{{ error }}</p>
+            {% endfor %}
+            </p>
+        {% endfor %}
+        {% if invalid_form.non_field_errors %}
+            <div style="color: red">
+            <p>{{invalid_form.non_field_errors}}</p>
+            </div>
+        {% endif %}
+        <button class="btn btn-primary" type="submit">Login</button>
     </form>
     <br>
-    <a href="{% url 'account:register' %}">Not having an account yet?</a>
+    <a href="{% url 'account:register' %}">Not have an account yet?</a>
 </div>
 {% endblock content %}
