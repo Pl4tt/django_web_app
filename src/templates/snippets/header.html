@@ -89,7 +89,7 @@
 					class="dropdown-menu dropdown-menu-dark"
 					aria-labelledby="id_profile_image_dropdown_button"
 				>
-					<li><a class="dropdown-item" href="#">Account</a></li>
+					<li><a class="dropdown-item" href="{% url 'account:profile' id=request.user.pk %}">Account</a></li>
 					<li><hr class="dropdown-divider" /></li>
 					<li><a class="dropdown-item" href="#">Settings</a></li>
 					<li><a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a></li>

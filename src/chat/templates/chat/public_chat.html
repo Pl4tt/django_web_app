@@ -7,6 +7,10 @@
         border: none;
         color: var(--main-text-color);
 	}
+	#id_chat_content_label {
+		display: block;
+		text-align: center;
+	}
 	#id_message_input {
 		background: var(--bs-dark);
 		color: var(--main-text-color);
@@ -17,14 +21,14 @@
 
 <div class="container">
 	<div class="row d-flex justify-content-center">
-		<div class="col-6">
+		<div class="col-9">
 			<form onsubmit="return sendMessage();">
 				<div class="form-group">
-					<label for="id_chat_content" class="h4 pt-5">Public Chatroom</label>
+					<label for="id_chat_content" id="id_chat_content_label" class="h4 pt-5">Public Chatroom</label>
 					<textarea
 						class="form-control shadow-lg p-3 mb-5"
 						id="id_chat_content"
-						rows="20"
+						rows="18"
 						readonly
 					></textarea>
 				</div>

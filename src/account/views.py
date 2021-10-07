@@ -3,6 +3,7 @@ from django.contrib.auth import authenticate, logout, login
 from django.http import HttpResponse
 
 from .forms import AccountAuthenticationForm, RegistrationForm
+from .models import Account
 
 
 
@@ -64,3 +65,8 @@ def login_view(request, *args, **kwargs):
 def logout_view(request):
     logout(request)
     return redirect("chat:public_chat")
+
+def profile_view(request, id: int):
+    context = {}
+    context["user"] = Account.objects.get(pk=id)
+    return render(request, "account/profile_view.html", context)
