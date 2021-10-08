@@ -4,6 +4,9 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
 class AccountManager(BaseUserManager):
     def create_user(self, username, email, password):
+        """
+        Creates a normal user and return its object.
+        """
         if not email:
             raise ValueError("Please enter an email address.")
         if not username:
@@ -18,6 +21,9 @@ class AccountManager(BaseUserManager):
         return user
 
     def create_superuser(self, username, email, password):
+        """
+        Creats a superuser and return it's object.
+        """
         user = self.create_user(username=username, email=email, password=password)
         user.is_admin = True
         user.is_superuser = True
@@ -27,9 +33,15 @@ class AccountManager(BaseUserManager):
         return user
 
 def get_default_profile_image():
+    """
+    Returns path to the default profile image.
+    """
     return "pictures/default_profile_image.png"
 
 def get_profile_image_filepath(self, filename):
+    """
+    Returns path to a users custom profile image. Used as the upload path of a profile image.
+    """
     return "profile_images/" + str(self.pk) + "/profile_image.png"
 
 class Account(AbstractBaseUser):

@@ -8,6 +8,9 @@ from .models import Account
 
 
 def get_redirect_if_exists(request):
+    """
+    gets your past position if exists.
+    """
     redirect = None
     if request.GET:
         if request.GET.get("next"):
@@ -17,6 +20,9 @@ def get_redirect_if_exists(request):
 
 
 def registration_view(request, *args, **kwargs):
+    """
+    All about the registration form and it's validation.
+    """
     context = {}
 
     if request.user.is_authenticated:
@@ -40,6 +46,9 @@ def registration_view(request, *args, **kwargs):
     return render(request, "account/registration.html", context)
 
 def login_view(request, *args, **kwargs):
+    """
+    All about the login form and it's validation.
+    """
     context = {}
 
     if request.user.is_authenticated:
@@ -63,10 +72,16 @@ def login_view(request, *args, **kwargs):
     return render(request, "account/login.html", context)
 
 def logout_view(request):
+    """
+    loggs you out and redirects you to home.
+    """
     logout(request)
-    return redirect("chat:public_chat")
+    return redirect("posts:home")
 
 def profile_view(request, id: int):
+    """
+    Renders profile of user if user exists.
+    """
     context = {}
     user = request.user
 
@@ -81,6 +96,9 @@ def profile_view(request, id: int):
     return render(request, "account/profile_view.html", context)
 
 def settings(request, id: int):
+    """
+    Renders the settings page from requested id if it's yourself.
+    """
     context = {}
     req_user = request.user
     try:
