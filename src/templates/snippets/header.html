@@ -72,6 +72,9 @@
 			</ul>
 			<div class="btn-group dropstart">
 			{% if request.user.is_authenticated %}
+				{% if request.user.is_admin %}
+					<a href="{% url 'admin:index' %}" class="nav-link">Admin</a> <!--TODO: Designing Button-->
+				{% endif %}
 				<button
 					class="btn btn-secondary dropdown-toggle"
 					type="button"
