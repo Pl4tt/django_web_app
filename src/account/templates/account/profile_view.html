@@ -3,5 +3,34 @@
 {% load static %}
 
 {% block content %}
-
+<div class="card-group justify-content-center">
+    <div class="card text-white bg-dark mb-3" style="max-width: 20rem;">
+        <img src="{{user.profile_image.url}}" alt="Platt" class="card-img-top">
+        <div class="card-header">biography</div>
+        <div class="card-body">
+            <p class="card-text">Username:</p>
+            <h5 class="card-text">{{user.username}}</h5>
+            <br>
+            <p class="card-text">Email Address:</p>
+            {% if is_self %}
+                <h5 class="card-text">{{user.email}}</h5>
+                <br>
+                <a class="btn btn-primary" href="{% url 'account:settings' id=request.user.pk %}">Edit Account</a>
+            {% else %}
+                {% if user.hide_email %}
+                    <h5 class="card-text">**********</h5>
+                {% else %} 
+                    <h5 class="card-text">{{user.email}}</h5>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
+        <div class="card-header">Header</div>
+        <div class="card-body">
+            <h5 class="card-title">{{user.biography}}</h5>
+            <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+        </div>
+    </div>
+</div>
 {% endblock content %}

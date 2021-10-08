@@ -91,7 +91,7 @@
 				>
 					<li><a class="dropdown-item" href="{% url 'account:profile' id=request.user.pk %}">Account</a></li>
 					<li><hr class="dropdown-divider" /></li>
-					<li><a class="dropdown-item" href="#">Settings</a></li>
+					<li><a class="dropdown-item" href="{% url 'account:settings' id=request.user.pk %}">Settings</a></li>
 					<li><a class="dropdown-item" href="{% url 'account:logout' %}">Logout</a></li>
 				</ul>
 			{% else %}

@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}Settings of {{user.username}}{% endblock title %}
+{% load static %}
+
+{% block content %}
+<style>
+    #id_profile_image:hover {
+        opacity: 0.3;
+        cursor: pointer;
+        transition-delay: 1;
+    }
+    #id_profile_image_button {
+        display: inline-block;
+        position: absolute;
+    }
+    .card {
+        margin: 0 auto; /* Added */
+        float: none; /* Added */
+        margin-bottom: 10px; /* Added */
+}
+</style>
+
+<div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
+    <form method="POST">
+        {% csrf_token %}
+        <img src="{{user.profile_image.url}}" id="id_profile_image" alt="Platt" class="card-img-top">
+        <a href="#" class="btn btn-primary" id="id_profile_image_button">Edit</a>
+        <div class="card-header"><input class="form-control me-2 custom-dark-input" value="biography"></div>
+        <div class="card-body">
+            <p class="card-text">Username:</p>
+            <input class="card-text form-control me-2 custom-dark-input" value="{{user.username}}">
+            <br>
+            <p class="card-text">Email Address:</p>
+            <input class="card-text form-control me-2 custom-dark-input" value="{{user.email}}">
+        </div>
+    </form>
+</div>
+
+{% endblock content %}

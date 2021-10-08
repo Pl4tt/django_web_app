@@ -68,5 +68,32 @@ def logout_view(request):
 
 def profile_view(request, id: int):
     context = {}
-    context["user"] = Account.objects.get(pk=id)
+    user = request.user
+
+    context["is_self"] = False
+    if user.pk == id:
+        context["is_self"] = True
+
+    try:
+        context["user"] = Account.objects.get(pk=id)
+    except Account.DoesNotExist:
+        return HttpResponse("User doesn't exists")
     return render(request, "account/profile_view.html", context)
+
+def settings(request, id: int):
+    context = {}
+    req_user = request.user
+    try:
+        user = Account.objects.get(pk=id)
+    except Account.DoesNotExist:
+        return HttpResponse("User doesn't exist")
+
+    if user.pk != req_user.pk:
+        return HttpResponse("You are not allowed to change someone else's account")
+    
+    if request.POST:
+        pass
+
+    context["user"] = req_user
+
+    return render(request, "account/settings.html", context)
