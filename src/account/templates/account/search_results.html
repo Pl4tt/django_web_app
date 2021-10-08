@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}{{q}}{% endblock title %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="card p-2">
+        {% if search_results %}
+            
+        {% else %}
+            <p>No Users found :(</p>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}
