@@ -116,21 +116,21 @@ def settings(request, id: int):
 
     return render(request, "account/settings.html", context)
 
-def search(request, q, *args, **kwargs):
+def search(request, *args, **kwargs):
     """
     Renders the search results.
     """
     context = {}
 
     if request.method == "GET":
-        accounts = Account.objects.filter(username__icontains=q).distinct()
-        accounts.append(Account.objects.filter(email__icontains=q).distinct())
+        query = request.GET["q"]
+        accounts = Account.objects.filter(username__icontains=query).distinct()
         search_results = []
 
         for account in accounts:
             search_results.append((account, False)) # TODO: replace false with is_friend when created friend system
 
         context["search_results"] = search_results
-        context["q"] = q
+        context["query"] = query
     
     return render(request, "account/search_results.html", context)

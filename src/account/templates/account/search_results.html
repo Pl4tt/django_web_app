@@ -1,15 +1,39 @@
 {% extends "base.html" %}
-{% block title %}{{q}}{% endblock title %}
+{% block title %}Search: {{query}}{% endblock title %}
 {% load static %}
 
 {% block content %}
+<style>
+    #id_profile_url {
+        text-decoration: none;
+        color: var(--main-text-color);
+    }
+</style>
+
 <div class="container">
-    <div class="card p-2">
-        {% if search_results %}
-            
-        {% else %}
+    <div class="card text-white bg-dark p-3">
+        {% for user in search_results %}
+        <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <a id="id_profile_url" href="{% url 'account:profile' id=user.0.pk %}">
+                        <img src="{{user.0.profile_image.url}}" class="img-fluid rounded-start" alt="Profile">
+                    </a>
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <a id="id_profile_url" href="{% url 'account:profile' id=user.0.pk %}">
+                            <h5 class="card-title">{{user.0.username}}</h5>
+                        </a>
+                        <p class="card-text">biography</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
             <p>No Users found :(</p>
-        {% endif %}
+        {% endfor %}
     </div>
 </div>
 

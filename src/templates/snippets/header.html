@@ -1,3 +1,5 @@
+{% load static %}
+
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
 	<div class="container-fluid">
 		<a class="navbar-brand" href="{% url 'posts:home' %}">Home</a>
@@ -15,16 +17,17 @@
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 				<form
-					class="d-flex"
-					id="id_seach_form"
+					class="search-bar d-flex"
 					onsubmit="return executeSearch();"
+					id="id_seach_form"
 				>
 					<input
 						id="id_search_bar"
 						class="form-control me-2 custom-dark-input"
 						type="search"
-						placeholder="Search"
-						aria-label="Search"
+						name="q"
+						placeholder="Search . . ."
+						aria-label="Search . . ."
 					/>
 					<button
 						id="id_seach_submit_button"
@@ -106,8 +109,10 @@
 
 <script>
 	function executeSearch() {
-		query = document.getelementById("id_search_bar").value;
-		window.loaction.replace("{% url 'account:search' %}?q=" + query);
+        var query = document.getElementById("id_search_bar").value
+		if (query.length > 0) {
+			window.location.replace("{% url 'account:search' %}?q=" + query)
+		}
 
 		return false;
 	}
