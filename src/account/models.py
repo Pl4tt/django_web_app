@@ -5,7 +5,7 @@ from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 class AccountManager(BaseUserManager):
     def create_user(self, username, email, password):
         """
-        Creates a normal user and return its object.
+        Creates and saves a normal user and return its object.
         """
         if not email:
             raise ValueError("Please enter an email address.")
@@ -22,7 +22,7 @@ class AccountManager(BaseUserManager):
 
     def create_superuser(self, username, email, password):
         """
-        Creats a superuser and return it's object.
+        Creats and saves a superuser and return it's object.
         """
         user = self.create_user(username=username, email=email, password=password)
         user.is_admin = True

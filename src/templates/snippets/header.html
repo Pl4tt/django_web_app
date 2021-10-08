@@ -107,7 +107,7 @@
 <script>
 	function executeSearch() {
 		query = document.getelementById("id_search_bar").value;
-		window.loaction.replace("#");
+		window.loaction.replace("{% url 'account:search' %}?q=" + query);
 
 		return false;
 	}
