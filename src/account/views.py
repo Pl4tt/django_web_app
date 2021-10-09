@@ -83,7 +83,7 @@ def profile_view(request: Any, user_id: int) -> HttpResponse:
         return render(request, "error.html", {
             "error_message": "User doesn't exist."
         })
-    context["post_list"] = context["user"].posts.all()
+        
     return render(request, "account/profile_view.html", context)
     
 def user_posts(request: Any, user_id: int) -> HttpResponse:
@@ -102,6 +102,25 @@ def user_posts(request: Any, user_id: int) -> HttpResponse:
     
     for post in reversed(user.posts.all()):
         context["posts"].append((post, check_likes(request.user, post)))
+
+    return render(request, "posts/post_view.html", context)
+
+def user_likes(request: Any, user_id: int) -> HttpResponse:
+    """
+    Returns a view with all posts the user has liked if the user exists.
+    """
+    context = {}
+    try:
+        user = Account.objects.get(pk=user_id)
+    except Account.DoesNotExist:
+        return render(request, "error.html", {
+            "error_message": "User doesn't exist."
+        })
+    context["user"] = user
+    context["posts"] = [] # ((Post): post, (bool): user has liked post)
+    
+    for like in reversed(user.likes.all()):
+        context["posts"].append((like.post, check_likes(request.user, like.post)))
 
     return render(request, "posts/post_view.html", context)
 

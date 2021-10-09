@@ -33,7 +33,14 @@
             <a href="{% url 'account:user_posts' user_id=user.pk %}" style="text-decoration: none;">
                 <div class="card text-white bg-dark">
                     <div class="card-header">
-                        Posts - {{post_list|length}}
+                        Posts - {{user.posts.all|length}}
+                    </div>
+                </div>
+            </a>
+            <a href="{% url 'account:user_likes' user_id=user.pk %}" style="text-decoration: none;">
+                <div class="card text-white bg-dark">
+                    <div class="card-header">
+                        Likes - {{user.likes.all|length}}
                     </div>
                 </div>
             </a>
