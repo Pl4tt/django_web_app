@@ -9,6 +9,7 @@ class AccountAdmin(UserAdmin):
     list_display_links = ("id", "username", "email")
     list_filter = ("is_admin", "is_staff", "is_superuser", "is_active", "hide_email")
     readonly_fields = ("id", "date_created", "last_login")
+    search_fields = ("id", "username", "email")
 
     filter_horizontal = ()
     fieldsets = ()
