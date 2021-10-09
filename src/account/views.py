@@ -4,6 +4,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout, login
 from django.http import HttpResponse, HttpResponseRedirect
 
+from posts.views import check_likes
 from .forms import AccountAuthenticationForm, RegistrationForm, AccountUpdateForm
 from .models import Account
 
@@ -97,7 +98,11 @@ def user_posts(request: Any, user_id: int) -> HttpResponse:
             "error_message": "User doesn't exist."
         })
     context["user"] = user
-    context["posts"] = user.posts.all()
+    context["posts"] = [] # ((Post): post, (bool): user has liked post)
+    
+    for post in reversed(user.posts.all()):
+        context["posts"].append((post, check_likes(request.user, post)))
+
     return render(request, "posts/post_view.html", context)
 
 def settings(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:

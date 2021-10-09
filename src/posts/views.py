@@ -25,9 +25,12 @@ def home_view(request: Any) -> HttpResponse:
     """
     Returns the view where all posts, comments etc. are viewed.
     """
-
     context = {}
-    context["posts"] = reversed(Post.objects.all())
+    context["posts"] = [] # ((Post): post, (bool): user has liked post)
+    
+    for post in reversed(Post.objects.all()):
+        context["posts"].append((post, check_likes(request.user, post)))
+
     return render(request, "posts/post_view.html", context)
 
 def create_post(request: Any) -> Union[HttpResponse, HttpResponseRedirect]:
@@ -91,6 +94,8 @@ def like_post(request: Any, post_id: int) -> JsonResponse:
     
     post = Post.objects.get(pk=post_id)
     like = Like.objects.filter(author=user, post=post)
+
+    print(post.likes.all())
 
     if not post:
         return render(request, "error.html", {

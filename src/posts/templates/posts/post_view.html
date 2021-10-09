@@ -32,11 +32,11 @@
     <br>
     <div class="card text-white bg-dark">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <a href="{% url 'account:profile' user_id=post.author.id %}" id="id_author_url">
-                <img src="{{post.author.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
-                <h6 class="card-text" id="id_author_username">{{post.author.username}}</h6>
+            <a href="{% url 'account:profile' user_id=post.0.author.id %}" id="id_author_url">
+                <img src="{{post.0.author.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
+                <h6 class="card-text" id="id_author_username">{{post.0.author.username}}</h6>
             </a>
-            {% if request.user.pk == post.author.pk %}
+            {% if request.user.pk == post.0.author.pk %}
                 <div class="dropdown">
                     <button class="btn btn-dark" id="id_option_dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                         <span class="material-icons">
@@ -45,7 +45,7 @@
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="id_option_dropdown">
                         <li><a class="dropdown-item active" href="#">Edit</a></li>
-                        <li><a class="dropdown-item" href="{% url 'posts:delete_post' post_id=post.pk %}">Delete</a></li>
+                        <li><a class="dropdown-item" href="{% url 'posts:delete_post' post_id=post.0.pk %}">Delete</a></li>
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item" href="#">Separated link</a></li>
@@ -54,15 +54,15 @@
             {% endif %}
         </div>
         <div class="card-body">
-            <p>{{post.content}}</p>
+            <p>{{post.0.content}}</p>
         </div>
         <div class="card-footer text-muted d-flex justify-content-between align-items-center">
-            <p class="card-text">{{post.date_created}}</p>
+            <p class="card-text">{{post.0.date_created}}</p>
             <div class="dropdown">
-                <button class="btn btn-dark" id="id_like_button" onclick="likePost({{post.pk}});">
-                    <p id="id_like_count_{{post.pk}}" style="vertical-align: middle; display: inline;">{{post.likes.all|length}}</p>
-                    <span id="id_like_picture_{{post.pk}}" class="material-icons">
-                        {% if true %}
+                <button class="btn btn-dark" id="id_like_button" onclick="likePost({{post.0.pk}});">
+                    <p id="id_like_count_{{post.0.pk}}" style="vertical-align: middle; display: inline;">{{post.0.likes.all|length}}</p>
+                    <span id="id_like_picture_{{post.0.pk}}" class="material-icons">
+                        {% if post.1 %}
                         thumb_up
                         {% else %}
                         thumb_up_off_alt
@@ -90,7 +90,6 @@
                 if (data["liked"] === true) {
                     likePicture.innerHTML = "thumb_up";
                 } else {
-                    console.log(likePicture.innerHTML)
                     likePicture.innerHTML = "thumb_up_off_alt";
                 }
             })
