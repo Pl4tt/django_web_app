@@ -1,6 +1,5 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout, login
-from django.http import HttpResponse
 
 from .forms import AccountAuthenticationForm, RegistrationForm, AccountUpdateForm
 from .models import Account
@@ -26,7 +25,9 @@ def registration_view(request, *args, **kwargs):
     context = {}
 
     if request.user.is_authenticated:
-        return HttpResponse(f"You are already logged in as {request.user.username}.")
+        return render(request, "error.html", {
+            "error_message": f"You are already logged in as {request.user.username}."
+        })
 
     if request.POST:
         form = RegistrationForm(request.POST)
@@ -52,7 +53,9 @@ def login_view(request, *args, **kwargs):
     context = {}
 
     if request.user.is_authenticated:
-        return HttpResponse(f"You are already logged in as {request.user.username}.")
+        return render(request, "error.html", {
+            "error_message": f"You are already logged in as {request.user.username}."
+        })
 
     if request.POST:
         form = AccountAuthenticationForm(request.POST)
@@ -92,7 +95,9 @@ def profile_view(request, id: int):
     try:
         context["user"] = Account.objects.get(pk=id)
     except Account.DoesNotExist:
-        return HttpResponse("User doesn't exists")
+        return render(request, "error.html", {
+            "error_message": "User doesn't exist."
+        })
     return render(request, "account/profile_view.html", context)
 
 def settings(request, id: int):
@@ -107,10 +112,14 @@ def settings(request, id: int):
     try:
         user = Account.objects.get(pk=id)
     except Account.DoesNotExist:
-        return HttpResponse("User doesn't exist")
+        return render(request, "error.html", {
+            "error_message": "User doesn't exist."
+        })
 
     if user.pk != req_user.pk:
-        return HttpResponse("You are not allowed to change someone else's account")
+        return render(request, "error.html", {
+            "error_message": "You are not allowed to change someone else's account."
+        })
     
     if request.POST:
         form = AccountUpdateForm(request.POST, instance=req_user)
