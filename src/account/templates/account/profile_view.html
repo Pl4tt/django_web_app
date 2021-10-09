@@ -31,6 +31,9 @@
             <h5 class="card-title">{{user.biography}}</h5>
             <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
         </div>
+        <div class="card-footer">
+            <p class="text-muted">Member since {{ user.date_created }}</p>
+        </div>
     </div>
 </div>
 {% endblock content %}

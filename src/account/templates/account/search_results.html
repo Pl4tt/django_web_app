@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}Search: {{query}}{% endblock title %}
+{% block title %}Search {{query}}{% endblock title %}
 {% load static %}
 
 {% block content %}
@@ -25,9 +25,11 @@
                         <a id="id_profile_url" href="{% url 'account:profile' id=user.0.pk %}">
                             <h5 class="card-title">{{user.0.username}}</h5>
                         </a>
-                        <p class="card-text">biography</p>
-                        <p class="card-text"><small class="text-muted">Member since {{ user.date_created }}</small></p>
+                        <p class="card-text">{{ user.0.biography }}</p>
                     </div>
+                </div>
+                <div class="card-footer">
+                    <small class="text-muted">Member since {{ user.0.date_created }}</small>
                 </div>
             </div>
         </div>
