@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Create a new Post{% endblock title %}
+
+{% block content %}
+<div class="container" align="center">
+    <br>
+    <h1>Create a new Post</h1>
+    <br>
+    <form method="POST">
+        {% csrf_token %}
+        <div class="form-floating">
+            <textarea name="post_content" class="form-control custom-dark-input" placeholder="Create a new Post" id="id_post_input" style="height: 350px"></textarea>
+            <label for="id_post_input">Create a new Post</label>
+        </div>
+        <br>
+        <button class="btn btn-primary" type="submit">Create Post</button>
+    </form>
+</div>
+{% endblock content %}

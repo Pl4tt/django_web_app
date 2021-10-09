@@ -93,6 +93,7 @@
 					aria-labelledby="id_profile_image_dropdown_button"
 				>
 					<li><a class="dropdown-item" href="{% url 'account:profile' id=request.user.pk %}">Account</a></li>
+					<li><a href="{% url 'posts:create_post' %}" class="dropdown-item">Create Post</a></li>
 					<li><hr class="dropdown-divider" /></li>
 					{% if request.user.is_admin %}
 						<li><a href="{% url 'admin:index' %}" class="dropdown-item">Admin</a></li>

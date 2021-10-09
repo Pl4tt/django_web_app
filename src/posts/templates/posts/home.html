@@ -1,8 +1,42 @@
 {% extends "base.html" %}
-{% load static %}
 {% block title %}Home{% endblock title %}
+{% load static %}
 
 {% block content %}
-
-
+<style>
+    #id_author_profile_img {
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+    #id_author_username {
+        vertical-align: middle;
+        display: inline;
+    }
+    #id_author_username:hover {
+        text-decoration: underline;
+    }
+    #id_author_url {
+        text-decoration: none;
+        color: var(--main-text-color);
+    }
+</style>
+<div class="container">
+    {% for post in posts %}
+    <br>
+    <div class="card text-white bg-dark">
+        <div class="card-header">
+            <a href="{% url 'account:profile' id=post.author.id %}" id="id_author_url">
+                <img src="{{post.author.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
+                <h6 class="card-text" id="id_author_username">{{post.author.username}}</h6>
+            </a>
+        </div>
+        <div class="card-body">
+            <p>{{post.content}}</p>
+        </div>
+        <div class="card-footer text-muted">{{post.date_created}}</div>
+    </div>
+    {% endfor %}
+    <br>
+    <p align="center">The End - no more Posts :(</p>
+</div>
 {% endblock content %}
