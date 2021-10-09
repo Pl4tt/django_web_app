@@ -1,17 +1,21 @@
+from typing import Union, Any
+
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect
+from django.conf import settings
 
 from .models import Post, Comment, Like
 
 
-def home_view(request):
+def home_view(request: Any) -> HttpResponse:
     """
     Returns the view where all posts, comments etc. are viewed.
     """
     context = {}
     context["posts"] = reversed(Post.objects.all())
-    return render(request, "posts/home.html", context)
+    return render(request, "posts/post_view.html", context)
 
-def create_post(request):
+def create_post(request: Any) -> Union[HttpResponse, HttpResponseRedirect]:
     """
     Returns the view where useres can create posts if they are authenticated.
     After they've created their post, the will be redirected to the home view.

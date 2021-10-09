@@ -1,12 +1,15 @@
+from typing import Union, Any
+
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout, login
+from django.http import HttpResponse, HttpResponseRedirect
 
 from .forms import AccountAuthenticationForm, RegistrationForm, AccountUpdateForm
 from .models import Account
 
 
 
-def get_redirect_if_exists(request):
+def get_redirect_if_exists(request: Any):
     """
     gets your past position if exists.
     """
@@ -18,7 +21,7 @@ def get_redirect_if_exists(request):
     return redirect
 
 
-def registration_view(request, *args, **kwargs):
+def registration_view(request: Any, *args, **kwargs) -> Union[HttpResponse, HttpResponseRedirect]:
     """
     All about the registration form and it's validation.
     """
@@ -46,7 +49,7 @@ def registration_view(request, *args, **kwargs):
             context["invalid_form"] = form
     return render(request, "account/registration.html", context)
 
-def login_view(request, *args, **kwargs):
+def login_view(request: Any, *args, **kwargs) -> Union[HttpResponse, HttpResponseRedirect]:
     """
     All about the login form and it's validation.
     """
@@ -74,14 +77,14 @@ def login_view(request, *args, **kwargs):
 
     return render(request, "account/login.html", context)
 
-def logout_view(request):
+def logout_view(request: Any) -> HttpResponseRedirect:
     """
     loggs you out and redirects you to home.
     """
     logout(request)
     return redirect("posts:home")
 
-def profile_view(request, id: int):
+def profile_view(request: Any, id: int) -> HttpResponse:
     """
     Renders profile of user if user exists.
     """
@@ -98,9 +101,25 @@ def profile_view(request, id: int):
         return render(request, "error.html", {
             "error_message": "User doesn't exist."
         })
+    context["post_list"] = context["user"].posts.all()
     return render(request, "account/profile_view.html", context)
+    
+def user_posts(request: Any, id: int) -> HttpResponse:
+    """
+    Returns a view with all posts of a user if the user exists.
+    """
+    context = {}
+    try:
+        user = Account.objects.get(pk=id)
+    except Account.DoesNotExist:
+        return render(request, "error.html", {
+            "error_message": "User doesn't exist."
+        })
+    context["user"] = user
+    context["posts"] = user.posts.all()
+    return render(request, "posts/post_view.html", context)
 
-def settings(request, id: int):
+def settings(request: Any, id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
     Renders the settings page from requested id if it's yourself and saves the changes if there are changes.
     """
@@ -133,7 +152,7 @@ def settings(request, id: int):
 
     return render(request, "account/settings.html", context)
 
-def search(request, *args, **kwargs):
+def search(request: Any, *args, **kwargs) -> HttpResponse:
     """
     Renders the search results.
     """
