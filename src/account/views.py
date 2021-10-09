@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout, login
 from django.http import HttpResponse
 
-from .forms import AccountAuthenticationForm, RegistrationForm
+from .forms import AccountAuthenticationForm, RegistrationForm, AccountUpdateForm
 from .models import Account
 
 
@@ -97,8 +97,11 @@ def profile_view(request, id: int):
 
 def settings(request, id: int):
     """
-    Renders the settings page from requested id if it's yourself.
+    Renders the settings page from requested id if it's yourself and saves the changes if there are changes.
     """
+    if not request.user.is_authenticated:
+        return redirect("account:login")
+
     context = {}
     req_user = request.user
     try:
@@ -110,7 +113,12 @@ def settings(request, id: int):
         return HttpResponse("You are not allowed to change someone else's account")
     
     if request.POST:
-        pass
+        form = AccountUpdateForm(request.POST, instance=req_user)
+        if form.is_valid():
+            form.save()
+            return redirect("account:profile", id=req_user.pk)
+        else:
+            context["error"] = "Form is invalid!"
 
     context["user"] = req_user
 
@@ -122,7 +130,7 @@ def search(request, *args, **kwargs):
     """
     context = {}
 
-    if request.method == "GET":
+    if request.GET:
         query = request.GET["q"]
         accounts = Account.objects.filter(username__icontains=query).distinct()
         search_results = []

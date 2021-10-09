@@ -44,7 +44,39 @@ class AccountAuthenticationForm(forms.ModelForm):
     
     def clean(self):
         if self.is_valid():
-            email = self.cleaned_data["email"]
+            email = self.cleaned_data["email"].lower()
             password = self.cleaned_data["password"]
             if not authenticate(email=email, password=password):
                 raise forms.ValidationError("Invalid email or password.")
+
+
+class AccountUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Account
+        fields = ("biography", "username", "email")
+
+    def save(self, commit=True):
+        account = super(AccountUpdateForm, self).save(commit=False)
+        account.biography = self.cleaned_data["biography"]
+        account.username = self.cleaned_data["username"]
+        account.email = self.cleaned_data["email"].lower()
+
+        if commit:
+            account.save()
+        return account
+            
+    def clean_username(self):
+        username = self.cleaned_data["username"]
+        try:
+            account = Account.objects.exclude(pk=self.instance.pk).get(username=username)
+        except Account.DoesNotExist:
+            return username
+        return forms.ValidationError("Username is already in use :(")
+    
+    def clean_email(self):
+        email = self.cleaned_data["email"].lower()
+        try:
+            account = Account.objects.exclude(pk=self.instance.pk).get(email=email)
+        except Account.DoesNotExist:
+            return email
+        return forms.ValidationError("Email is already in use :((")
