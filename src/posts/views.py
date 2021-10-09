@@ -7,6 +7,18 @@ from django.conf import settings
 from .models import Post, Comment, Like
 
 
+def get_redirect_if_exists(request: Any):
+    """
+    gets your past position if exists.
+    """
+    redirect = None
+    if request.GET:
+        if request.GET.get("next"):
+            redirect = str(request.GET.get("next"))
+    print(type(redirect))
+    return redirect
+
+
 def home_view(request: Any) -> HttpResponse:
     """
     Returns the view where all posts, comments etc. are viewed.
@@ -37,3 +49,28 @@ def create_post(request: Any) -> Union[HttpResponse, HttpResponseRedirect]:
         return redirect("posts:home")
     
     return render(request, "posts/create_post.html", context)
+
+def delete_post(request: Any, post_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
+    """
+    Deletes the post with the given id if it exists and user is authenticated and redirects User to his past url.
+    """
+    user = request.user
+
+    if not user.is_authenticated:
+        redirect("account:login")
+
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return render(request, "error.html", {
+            "error_message": "The post with the given id does not exist."
+        })
+    
+    if user.pk != post.author.pk:
+        return render(request, "error.html", {
+            "error_message": "You are not allowed to delete someone else's post"
+        })
+    
+    destination = get_redirect_if_exists(request)
+
+    return redirect(destination)

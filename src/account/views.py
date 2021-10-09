@@ -84,7 +84,7 @@ def logout_view(request: Any) -> HttpResponseRedirect:
     logout(request)
     return redirect("posts:home")
 
-def profile_view(request: Any, id: int) -> HttpResponse:
+def profile_view(request: Any, user_id: int) -> HttpResponse:
     """
     Renders profile of user if user exists.
     """
@@ -92,11 +92,11 @@ def profile_view(request: Any, id: int) -> HttpResponse:
     user = request.user
 
     context["is_self"] = False
-    if user.pk == id:
+    if user.pk == user_id:
         context["is_self"] = True
 
     try:
-        context["user"] = Account.objects.get(pk=id)
+        context["user"] = Account.objects.get(pk=user_id)
     except Account.DoesNotExist:
         return render(request, "error.html", {
             "error_message": "User doesn't exist."
@@ -104,13 +104,13 @@ def profile_view(request: Any, id: int) -> HttpResponse:
     context["post_list"] = context["user"].posts.all()
     return render(request, "account/profile_view.html", context)
     
-def user_posts(request: Any, id: int) -> HttpResponse:
+def user_posts(request: Any, user_id: int) -> HttpResponse:
     """
     Returns a view with all posts of a user if the user exists.
     """
     context = {}
     try:
-        user = Account.objects.get(pk=id)
+        user = Account.objects.get(pk=user_id)
     except Account.DoesNotExist:
         return render(request, "error.html", {
             "error_message": "User doesn't exist."
@@ -119,7 +119,7 @@ def user_posts(request: Any, id: int) -> HttpResponse:
     context["posts"] = user.posts.all()
     return render(request, "posts/post_view.html", context)
 
-def settings(request: Any, id: int) -> Union[HttpResponse, HttpResponseRedirect]:
+def settings(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
     Renders the settings page from requested id if it's yourself and saves the changes if there are changes.
     """
@@ -129,7 +129,7 @@ def settings(request: Any, id: int) -> Union[HttpResponse, HttpResponseRedirect]
     context = {}
     req_user = request.user
     try:
-        user = Account.objects.get(pk=id)
+        user = Account.objects.get(pk=user_id)
     except Account.DoesNotExist:
         return render(request, "error.html", {
             "error_message": "User doesn't exist."

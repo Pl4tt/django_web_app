@@ -16,7 +16,7 @@
             {% if is_self %}
                 <h5 class="card-text">{{user.email}}</h5>
                 <br>
-                <a class="btn btn-primary" href="{% url 'account:settings' id=request.user.pk %}">Edit Account</a>
+                <a class="btn btn-primary" href="{% url 'account:settings' user_id=request.user.pk %}">Edit Account</a>
             {% else %}
                 {% if user.hide_email %}
                     <h5 class="card-text">**********</h5>
@@ -30,7 +30,7 @@
         <div class="card-header">Statistics</div>
         <div class="card-body">
             <h5 class="card-title">{{user.biography}}</h5>
-            <a href="{% url 'account:user_posts' id=user.pk %}" style="text-decoration: none;">
+            <a href="{% url 'account:user_posts' user_id=user.pk %}" style="text-decoration: none;">
                 <div class="card text-white bg-dark">
                     <div class="card-header">
                         Posts - {{post_list|length}}

@@ -16,13 +16,13 @@
         <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <a id="id_profile_url" href="{% url 'account:profile' id=user.0.pk %}">
+                    <a id="id_profile_url" href="{% url 'account:profile' user_id=user.0.pk %}">
                         <img src="{{user.0.profile_image.url}}" class="img-fluid rounded-start" alt="Profile">
                     </a>
                 </div>
                 <div class="col-md-8">
                     <div class="card-body">
-                        <a id="id_profile_url" href="{% url 'account:profile' id=user.0.pk %}">
+                        <a id="id_profile_url" href="{% url 'account:profile' user_id=user.0.pk %}">
                             <h5 class="card-title">{{user.0.username}}</h5>
                         </a>
                         <p class="card-text">{{ user.0.biography }}</p>

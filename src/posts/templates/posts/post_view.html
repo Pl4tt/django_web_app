@@ -25,7 +25,7 @@
     <br>
     <div class="card text-white bg-dark">
         <div class="card-header">
-            <a href="{% url 'account:profile' id=post.author.id %}" id="id_author_url">
+            <a href="{% url 'account:profile' user_id=post.author.id %}" id="id_author_url">
                 <img src="{{post.author.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
                 <h6 class="card-text" id="id_author_username">{{post.author.username}}</h6>
             </a>

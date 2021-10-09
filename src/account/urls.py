@@ -9,8 +9,8 @@ urlpatterns = [
     path("register/", views.registration_view, name="register"),
     path("login/", views.login_view, name="login"),
     path("logout/", views.logout_view, name="logout"),
-    path("account/<int:id>/", views.profile_view, name="profile"),
-    path("user_posts/<int:id>/", views.user_posts, name="user_posts"),
-    path("settings/<int:id>/", views.settings, name="settings"),
+    path("account/<int:user_id>/", views.profile_view, name="profile"),
+    path("user-posts/<int:user_id>/", views.user_posts, name="user_posts"),
+    path("settings/<int:user_id>/", views.settings, name="settings"),
     path("search/", views.search, name="search"),
 ]
