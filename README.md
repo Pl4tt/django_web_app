@@ -1,2 +1,3 @@
 # django_web_app
-A web application written in django
+A web application written in django (currently in development)
+Feel free to create a pull request if you want...
