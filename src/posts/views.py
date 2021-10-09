@@ -7,16 +7,11 @@ from django.conf import settings
 from .models import Post, Comment, Like
 
 
-def get_redirect_if_exists(request: Any):
+def get_past_position(request: Any):
     """
-    gets your past position if exists.
+    gets the users past position if exists.
     """
-    redirect = None
-    if request.GET:
-        if request.GET.get("next"):
-            redirect = str(request.GET.get("next"))
-    print(type(redirect))
-    return redirect
+    return request.META.get('HTTP_REFERER')
 
 
 def home_view(request: Any) -> HttpResponse:
@@ -70,7 +65,11 @@ def delete_post(request: Any, post_id: int) -> Union[HttpResponse, HttpResponseR
         return render(request, "error.html", {
             "error_message": "You are not allowed to delete someone else's post"
         })
-    
-    destination = get_redirect_if_exists(request)
 
-    return redirect(destination)
+    post.delete()
+    
+    destination = get_past_position(request)
+    if destination:
+        return redirect(destination)
+    return redirect("posts:home")
+

@@ -9,18 +9,6 @@ from .models import Account
 
 
 
-def get_redirect_if_exists(request: Any):
-    """
-    gets your past position if exists.
-    """
-    redirect = None
-    if request.GET:
-        if request.GET.get("next"):
-            redirect = str(request.GET.get("next"))
-    
-    return redirect
-
-
 def registration_view(request: Any, *args, **kwargs) -> Union[HttpResponse, HttpResponseRedirect]:
     """
     All about the registration form and it's validation.
@@ -40,11 +28,7 @@ def registration_view(request: Any, *args, **kwargs) -> Union[HttpResponse, Http
             password = form.cleaned_data["password1"]
             account = authenticate(email=email, password=password)
             login(request, account)
-
-            destination = get_redirect_if_exists(request)
-            if destination:
-                return redirect(destination)
-            return redirect("chat:public_chat")
+            return redirect("posts:home")
         else:
             context["invalid_form"] = form
     return render(request, "account/registration.html", context)
@@ -68,10 +52,7 @@ def login_view(request: Any, *args, **kwargs) -> Union[HttpResponse, HttpRespons
             account = authenticate(email=email, password=password)
             if account:
                 login(request, account)
-                destination = get_redirect_if_exists(request)
-                if destination:
-                    return redirect(destination)
-                return redirect("chat:public_chat")
+                return redirect("posts:home")
         else:
             context["invalid_form"] = form
 
@@ -144,7 +125,7 @@ def settings(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedi
         form = AccountUpdateForm(request.POST, instance=req_user)
         if form.is_valid():
             form.save()
-            return redirect("account:profile", id=req_user.pk)
+            return redirect("account:profile", user_id=req_user.pk)
         else:
             context["error"] = "Form is invalid!"
 

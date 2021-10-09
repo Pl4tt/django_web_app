@@ -24,11 +24,27 @@
     {% for post in posts %}
     <br>
     <div class="card text-white bg-dark">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <a href="{% url 'account:profile' user_id=post.author.id %}" id="id_author_url">
                 <img src="{{post.author.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
                 <h6 class="card-text" id="id_author_username">{{post.author.username}}</h6>
             </a>
+            {% if request.user.pk == post.author.pk %}
+                <div class="dropdown">
+                    <button class="btn btn-dark" id="id_option_dropdown" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <span class="material-icons">
+                            more_vert
+                        </span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="id_option_dropdown">
+                        <li><a class="dropdown-item active" href="#">Edit</a></li>
+                        <li><a class="dropdown-item" href="{% url 'posts:delete_post' post_id=post.pk %}">Delete</a></li>
+                        <li><a class="dropdown-item" href="#">Something else here</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#">Separated link</a></li>
+                    </ul>
+                </div>
+            {% endif %}
         </div>
         <div class="card-body">
             <p>{{post.content}}</p>
