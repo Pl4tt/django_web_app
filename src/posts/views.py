@@ -1,6 +1,6 @@
 from typing import Union, Any
 
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.conf import settings
 
@@ -14,10 +14,18 @@ def get_past_position(request: Any):
     return request.META.get('HTTP_REFERER')
 
 
+def check_likes(user: settings.AUTH_USER_MODEL, post: Post) -> bool:
+    """
+    Returns True if the user has liked the post else false
+    """
+    return user in map(lambda like: like.author, post.likes.all())
+
+
 def home_view(request: Any) -> HttpResponse:
     """
     Returns the view where all posts, comments etc. are viewed.
     """
+
     context = {}
     context["posts"] = reversed(Post.objects.all())
     return render(request, "posts/post_view.html", context)
@@ -73,3 +81,31 @@ def delete_post(request: Any, post_id: int) -> Union[HttpResponse, HttpResponseR
         return redirect(destination)
     return redirect("posts:home")
 
+def like_post(request: Any, post_id: int) -> JsonResponse:
+    """
+    Returns a json response containing a boolean if the user has liked the post and the number of likes.
+    """
+    user = request.user
+    if not user.is_authenticated:
+        return redirect("account:login")
+    
+    post = Post.objects.get(pk=post_id)
+    like = Like.objects.filter(author=user, post=post)
+
+    if not post:
+        return render(request, "error.html", {
+            "error_message": "Post doesn't exist."
+        })
+    
+    if like:
+        like.delete()
+    else:
+        like = Like(post=post, author=user)
+        like.save()
+        
+    ret_json = {
+        "likes": len(post.likes.all()),
+        "liked": check_likes(user, post),
+    }
+    
+    return JsonResponse(ret_json)
