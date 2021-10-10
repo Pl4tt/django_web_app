@@ -124,6 +124,26 @@ def user_likes(request: Any, user_id: int) -> HttpResponse:
 
     return render(request, "posts/post_view.html", context)
 
+def user_comments(request: Any, user_id: int) -> HttpResponse:
+    """
+    Returns a view with all posts the user has commented if the user exists.
+    """
+    context = {}
+    try:
+        user = Account.objects.get(pk=user_id)
+    except Account.DoesNotExist:
+        return render(request, "error.html", {
+            "error_message": "User does not exist."
+        })
+    context["user"] = user
+    context["posts"] = [] # ((Post): post, (bool): user has liked post)
+
+    for comment in reversed(sorted(user.comments.all(), key=lambda comment: comment.post.date_created)):
+        if not (temp := (comment.post, check_likes(request.user, comment.post))) in context["posts"]:
+            context["posts"].append(temp)
+    
+    return render(request, "posts/post_view.html", context)
+
 def settings(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
     Renders the settings page from requested id if it's yourself and saves the changes if there are changes.

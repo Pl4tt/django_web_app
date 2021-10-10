@@ -160,29 +160,26 @@
                 var breakElement = document.createElement("br")
                 var breakElement2 = document.createElement("br")
 
-                var footerText = document.createElement("small", {
-                    class: "text-muted",
-                })
+                var footerText = document.createElement("small")
+                footerText.setAttribute("class", "text-muted")
                 footerText.innerHTML = data["comment_date_created"]
 
-                var authorSection = document.createElement("div", {
-                    class: "card-text"
-                })
-                var authorLink = document.createElement("a", {
-                    id: "id_comment_author_link",
-                    href: "{% url 'account:profile' user_id=1234 %}".replace("1234", data["comment_author_pk"]),
-                })
-                var authorImage = document.createElement("img", {
-                    id: "id_comment_author_profile_img",
-                    src: data["comment_author_profile_image_url"],
-                    alt: "Logo",
-                    width: "20px",
-                    height: "20px",
-                    style: "border-radius: 50%;"
-                })
-                var authorUsernameContent = document.createElement("p", {
-                    id: "id_comment_author_username",
-                })
+                var authorSection = document.createElement("div")
+                authorSection.setAttribute("class", "card-text")
+
+                var authorLink = document.createElement("a")
+                authorLink.setAttribute("id", "id_comment_author_link")
+                authorLink.setAttribute("href", "{% url 'account:profile' user_id=1234 %}".replace("1234", data["comment_author_pk"]))
+
+                var authorImage = document.createElement("img")
+                authorImage.setAttribute("id", "id_comment_author_profile_img")
+                authorImage.setAttribute("src", data["comment_author_profile_image_url"])
+                authorImage.setAttribute("alt", "Logo")
+                authorImage.setAttribute("width", "20px")
+                authorImage.setAttribute("height", "20px")
+
+                var authorUsernameContent = document.createElement("p")
+                authorUsernameContent.setAttribute("id", "id_comment_author_username")
                 authorUsernameContent.innerHTML = `${data["comment_author_username"]}: ${data["comment_content"]}`
                 
                 authorLink.appendChild(authorImage)

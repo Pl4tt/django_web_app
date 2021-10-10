@@ -44,6 +44,13 @@
                     </div>
                 </div>
             </a>
+            <a href="{% url 'account:user_comments' user_id=user.pk %}" style="text-decoration: none;">
+                <div class="card text-white bg-dark">
+                    <div class="card-header">
+                        Comments - {{user.comments.all|length}}
+                    </div>
+                </div>
+            </a>
         </div>
         <div class="card-footer">
             <p class="text-muted">Member since {{ user.date_created }}</p>
