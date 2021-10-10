@@ -23,13 +23,32 @@
                 {% else %} 
                     <h5 class="card-text">{{user.email}}</h5>
                 {% endif %}
+                <br>
+                {% if request.user in follower %}
+                    <a href="{% url 'account:follow' user_id=user.pk %}" class="btn btn-primary" disabled>Followed</a>
+                {% else %}
+                    <a href="{% url 'account:follow' user_id=user.pk %}" class="btn btn-outline-primary">Follow</a>
+                {% endif %}
             {% endif %}
         </div>
     </div>
     <div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
         <div class="card-header">Statistics</div>
         <div class="card-body">
-            <h5 class="card-title">{{user.biography}}</h5>
+            <a href="#" style="text-decoration: none;">
+                <div class="card text-white bg-dark">
+                    <div class="card-header">
+                        Follower - {{user.follower.all|length}}
+                    </div>
+                </div>
+            </a>
+            <a href="#" style="text-decoration: none;">
+                <div class="card text-white bg-dark">
+                    <div class="card-header">
+                        Following - {{user.following.all|length}}
+                    </div>
+                </div>
+            </a>
             <a href="{% url 'account:user_posts' user_id=user.pk %}" style="text-decoration: none;">
                 <div class="card text-white bg-dark">
                     <div class="card-header">
@@ -40,14 +59,14 @@
             <a href="{% url 'account:user_likes' user_id=user.pk %}" style="text-decoration: none;">
                 <div class="card text-white bg-dark">
                     <div class="card-header">
-                        Likes - {{user.likes.all|length}}
+                        Liked Posts - {{user.likes.all|length}}
                     </div>
                 </div>
             </a>
             <a href="{% url 'account:user_comments' user_id=user.pk %}" style="text-decoration: none;">
                 <div class="card text-white bg-dark">
                     <div class="card-header">
-                        Comments - {{user.comments.all|length}}
+                        Commented Posts - {{user.comments.all|length}}
                     </div>
                 </div>
             </a>

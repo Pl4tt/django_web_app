@@ -2,12 +2,18 @@ from typing import Union, Any
 
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout, login
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 
-from posts.views import check_likes
+from posts.views import check_likes, get_past_position
 from .forms import AccountAuthenticationForm, RegistrationForm, AccountUpdateForm
-from .models import Account
+from .models import Account, Follow
 
+
+def check_follow(user1: Account, user2: Account) -> bool:
+    """
+    Returns True if user1 follows user2 else False.
+    """
+    return user2 in user1.followers.all()
 
 
 def registration_view(request: Any, *args, **kwargs) -> Union[HttpResponse, HttpResponseRedirect]:
@@ -83,6 +89,8 @@ def profile_view(request: Any, user_id: int) -> HttpResponse:
         return render(request, "error.html", {
             "error_message": "User doesn't exist."
         })
+    
+    context["follower"] = list(map(lambda follow: follow.following_user, context["user"].follower.all()))
         
     return render(request, "account/profile_view.html", context)
     
@@ -195,3 +203,43 @@ def search(request: Any, *args, **kwargs) -> HttpResponse:
         context["query"] = query
     
     return render(request, "account/search_results.html", context)
+
+def follow(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
+    """
+    
+    """
+    context = {}
+
+    if not request.user.is_authenticated:
+        return redirect("account:login")
+
+    try:
+        user = Account.objects.get(pk=user_id)
+    except Account.DoesNotExist:
+        return render(request, "error.html", {
+            "error_message": "User doesn't exist."
+        })
+    
+    if request.user.pk == user.pk:
+        return render(request, "error.html", {
+            "error_message": "You are not allowed to follow yourself."
+        })
+    
+    follow = Follow.objects.filter(following_user=request.user, followed_user=user)
+
+    if follow:
+        follow.delete()
+    else:
+        follow = Follow(following_user=request.user, followed_user=user)
+        follow.save()
+
+    destination = get_past_position(request)
+    if destination:
+        return redirect(destination)
+    return redirect("account:profile", user_id=user_id)
+
+def follow_view(request: Any, user_id: int, what: str) -> HttpResponse:
+    """
+    (what = follower/following etc.)
+    """
+    pass

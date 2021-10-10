@@ -3,11 +3,14 @@
 {% load static %}
 
 {% block content %}
+
 <style>
+
     #id_profile_url {
         text-decoration: none;
         color: var(--main-text-color);
     }
+
 </style>
 
 <div class="container">
@@ -16,7 +19,7 @@
         <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
             <div class="row g-0">
                 <div class="col-md-4">
-                    <a id="id_profile_url" href="{% url 'account:profile' user_id=user.0.pk %}">
+                    <a href="{% url 'account:profile' user_id=user.0.pk %}">
                         <img src="{{user.0.profile_image.url}}" class="img-fluid rounded-start" alt="Profile">
                     </a>
                 </div>

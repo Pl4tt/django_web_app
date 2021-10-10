@@ -4,6 +4,7 @@
 
 {% block content %}
 <style>
+
     #id_author_profile_img {
         border-radius: 50%;
         vertical-align: middle;
@@ -42,7 +43,9 @@
         vertical-align: middle;
         display: inline;
     }
+
 </style>
+
 <div class="container">
     {% for post in posts %}
     <br>
@@ -79,30 +82,26 @@
                     </button>
                 </div>
             </form>
-            {% if post.0.comments.all %}
-                <a class="btn btn-primary" id="id_comment_dropdown_button_{{post.0.pk}}" onclick="collapseComments({{post.0.pk}});" data-bs-toggle="collapse" href="#id_comment_dropdown_{{post.0.pk}}" role="button" aria-expanded="false" aria-controls="id_comment_dropdown_{{post.0.pk}}">
-                    show {{post.0.comments.all|length}} comments
-                </a>
-                <div class="collapse" id="id_comment_dropdown_{{post.0.pk}}">
-                    <div class="card text-white bg-dark card-body" id="id_comment_holder_{{post.0.pk}}">
-                        {% for comment in post.0.comments.all|slice:"::-1" %}
-                        <div>
-                            <div class="card-text">
-                                <a id="id_comment_author_link" href="{% url 'account:profile' user_id=comment.author.pk %}">
-                                    <img id="id_comment_author_profile_img" src="{{ comment.author.profile_image.url }}" alt="Logo" width="20px" height="20px">
-                                    <p id="id_comment_author_username">{{ comment.author.username }}: {{ comment.content }}</p>
-                                </a>
-                            </div>
-                            <small class="text-muted">{{comment.date_created}}</small>
-                            <br>
-                            <br>
+            <a class="btn btn-primary" id="id_comment_dropdown_button_{{post.0.pk}}" onclick="collapseComments({{post.0.pk}});" data-bs-toggle="collapse" href="#id_comment_dropdown_{{post.0.pk}}" role="button" aria-expanded="false" aria-controls="id_comment_dropdown_{{post.0.pk}}">
+                show {{post.0.comments.all|length}} comments
+            </a>
+            <div class="collapse" id="id_comment_dropdown_{{post.0.pk}}">
+                <div class="card text-white bg-dark card-body" id="id_comment_holder_{{post.0.pk}}">
+                    {% for comment in post.0.comments.all|slice:"::-1" %}
+                    <div>
+                        <div class="card-text">
+                            <a id="id_comment_author_link" href="{% url 'account:profile' user_id=comment.author.pk %}">
+                                <img id="id_comment_author_profile_img" src="{{ comment.author.profile_image.url }}" alt="Logo" width="20px" height="20px">
+                                <p id="id_comment_author_username">{{ comment.author.username }}: {{ comment.content }}</p>
+                            </a>
                         </div>
-                        {% endfor %}
+                        <small class="text-muted">{{comment.date_created}}</small>
+                        <br>
+                        <br>
                     </div>
+                    {% endfor %}
                 </div>
-            {% else %}
-                <p class="card-text text-muted">No comments :(</p>
-            {% endif %}
+            </div>
         </div>
         <div class="card-footer text-muted d-flex justify-content-between align-items-center">
             <p class="card-text">{{post.0.date_created}}</p>
@@ -129,12 +128,12 @@
     function likePost(postId) {
         const likeCount = document.querySelector(`#id_like_count_${postId}`);
         const likePicture = document.querySelector(`#id_like_picture_${postId}`);
-        
+            
         fetch("{% url 'posts:like_post' post_id=1234 %}".replace("1234", postId.toString(), {method: "POST"}))
             .then((res) => res.json())
             .then((data) => {
                 likeCount.innerHTML = data["like_count"];
-                
+                    
                 if (data["liked"] === true) {
                     likePicture.innerHTML = "thumb_up";
                 } else {
@@ -144,6 +143,7 @@
             .catch((e) => alert("Error executed while trying to like the Post :("));
     }
 
+    
     function commentPost(postId) {
         const commentInputField = document.querySelector(`#id_comment_content_input_${postId}`);
         const commentContent = commentInputField.value;
@@ -181,7 +181,7 @@
                 var authorUsernameContent = document.createElement("p")
                 authorUsernameContent.setAttribute("id", "id_comment_author_username")
                 authorUsernameContent.innerHTML = `${data["comment_author_username"]}: ${data["comment_content"]}`
-                
+                    
                 authorLink.appendChild(authorImage)
                 authorLink.appendChild(authorUsernameContent)
                 authorSection.appendChild(authorLink)
@@ -207,5 +207,7 @@
             collapseButton.innerHTML = collapseButton.innerHTML.replace("hide", "show");
         }
     }
+    
 </script>
+
 {% endblock content %}

@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}{{what}} of {{user.username}}{% endblock title %}
+{% load static %}
+
+{% block content %}
+<style>
+    
+    #id_author_profile_img {
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+    #id_author_username {
+        vertical-align: middle;
+        display: inline;
+    }
+</style>
+
+<div class="container">
+    <div class="card text-white bg-dark">
+        <div class="card-header"><p>{{what}} of {{user.username}}</p></div>
+        <div class="card-body">
+            {% for user in list %}
+                <a href="{% url 'account:profile' user_id=user.pk %}" style="text-decoration: none; color: var(--main-text-color);">
+                    <div class="card text-white bg-dark">
+                        <div class="card-header">
+                            <img src="{{user.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
+                            <h6 class="card-text" id="id_author_username">{{user.username}}</h6>
+                        </div>
+                    </div>
+                </a>
+            {% empty %}
+                <p>No {{what}} :((</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

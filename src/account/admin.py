@@ -1,9 +1,10 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
-from .models import Account
+from .models import Account, Follow
 
 
+@admin.register(Account)
 class AccountAdmin(UserAdmin):
     list_display = ("id", "username", "email", "date_created", "last_login", "is_admin", "is_staff")
     list_display_links = ("id", "username", "email")
@@ -14,4 +15,12 @@ class AccountAdmin(UserAdmin):
     filter_horizontal = ()
     fieldsets = ()
 
-admin.site.register(Account, AccountAdmin)
+
+@admin.register(Follow)
+class FollowAdmin(admin.ModelAdmin):
+    list_display = ("id", "following_user", "followed_user", "date_created")
+    list_display_links = ("id", "following_user", "followed_user")
+    list_filter = ("following_user", "followed_user")
+    readonly_fields = ("id", "following_user", "followed_user", "date_created")
+    search_fields = ("id",)
+

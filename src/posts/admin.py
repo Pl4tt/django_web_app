@@ -3,6 +3,7 @@ from django.contrib import admin
 from .models import Post, Comment, Like
 
 
+@admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
     list_display = ("id", "author", "date_created")
     list_display_links = ("id", "author")
@@ -11,6 +12,7 @@ class PostAdmin(admin.ModelAdmin):
     search_fields = ("id", "content")
 
 
+@admin.register(Comment)
 class CommentAdmin(admin.ModelAdmin):
     list_display = ("id", "author", "post", "date_created")
     list_display_links = ("id", "author", "post")
@@ -19,6 +21,7 @@ class CommentAdmin(admin.ModelAdmin):
     search_fields = ("id", "content")
 
 
+@admin.register(Like)
 class LikeAdmin(admin.ModelAdmin):
     list_display = ("id", "author", "post", "date_created")
     list_display_links = ("id", "author", "post")
@@ -27,7 +30,4 @@ class LikeAdmin(admin.ModelAdmin):
     search_fields = ("id",)
 
 
-admin.site.register(Post, PostAdmin)
-admin.site.register(Comment, CommentAdmin)
-admin.site.register(Like, LikeAdmin)
 

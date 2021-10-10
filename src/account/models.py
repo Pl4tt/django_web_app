@@ -75,3 +75,12 @@ class Account(AbstractBaseUser):
 
     def has_module_perms(self, app_label):
         return True
+
+
+class Follow(models.Model):
+    following_user = models.ForeignKey(Account, related_name="following", on_delete=models.CASCADE)
+    followed_user = models.ForeignKey(Account, related_name="follower", on_delete=models.CASCADE)
+    date_created = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"{self.following_user.username} followed {self.followed_user.username}"

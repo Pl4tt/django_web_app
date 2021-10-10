@@ -3,7 +3,9 @@
 {% load static %}
 
 {% block content %}
+
 <style>
+
     #id_profile_image:hover {
         opacity: 0.3;
         cursor: pointer;
@@ -17,37 +19,39 @@
         margin: 0 auto;
         float: none;
         margin-bottom: 10px;
-}
+    }
 </style>
 
-<div class="card text-white bg-dark mb-3" style="max-width: 30rem;">
-    <form class="form-signin" method="POST">
-        {% csrf_token %}
-        <img src="{{user.profile_image.url}}" id="id_profile_image" alt="Platt" class="card-img-top">
-        <a href="#" class="btn btn-primary" id="id_profile_image_button">Edit</a>
-        <div class="card-header">
-            <p class="card-title">Biography:</p>
-            <textarea name="biography" class="form-control me-2 custom-dark-input" style="height: 100px;">{{ user.biography }}</textarea>
-        </div>
-        <div class="card-body">
-            <p class="card-text">Username:</p>
-            <input name="username" class="card-text form-control me-2 custom-dark-input" value="{{user.username}}">
-            <br>
-            <p class="card-text">Email Address:</p>
-            <input name="email" class="card-text form-control me-2 custom-dark-input" value="{{user.email}}">
-            <br>
-            <input name="hide_email" type="checkbox" checked="{{user.hide_email}}" id="id_hide_email">
-            <label class="form-check-label" for="id_hide_email">
-                Hide Email
-            </label>
-            <div align="center">
-                {% if error %}
-                <p style="color: red;">{{error}}</p>
-                {% endif %}
-                <button class="btn btn-primary" type="submit">Save</button>
+<div class="container">
+    <div class="card text-white bg-dark mb-3 mx-auto" style="max-width: 30rem;">
+        <form class="form-signin" method="POST">
+            {% csrf_token %}
+            <img src="{{user.profile_image.url}}" id="id_profile_image" alt="Platt" class="card-img-top">
+            <a href="#" class="btn btn-primary" id="id_profile_image_button">Edit</a>
+            <div class="card-header">
+                <p class="card-title">Biography:</p>
+                <textarea name="biography" class="form-control me-2 custom-dark-input" style="height: 100px;">{{ user.biography }}</textarea>
             </div>
-        </div>
-    </form>
+            <div class="card-body">
+                <p class="card-text">Username:</p>
+                <input name="username" class="card-text form-control me-2 custom-dark-input" value="{{user.username}}">
+                <br>
+                <p class="card-text">Email Address:</p>
+                <input name="email" class="card-text form-control me-2 custom-dark-input" value="{{user.email}}">
+                <br>
+                <input name="hide_email" type="checkbox" checked="{{user.hide_email}}" id="id_hide_email">
+                <label class="form-check-label" for="id_hide_email">
+                    Hide Email
+                </label>
+                <div align="center">
+                    {% if error %}
+                    <p style="color: red;">{{error}}</p>
+                    {% endif %}
+                    <button class="btn btn-primary" type="submit">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
 {% endblock content %}
