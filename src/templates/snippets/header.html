@@ -2,6 +2,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
 	<div class="container-fluid">
+		<!-- Home Button -->
 		<a class="navbar-brand underline_hover" href="{% url 'posts:home' %}">Home</a>
 		<button
 			class="navbar-toggler"
@@ -16,6 +17,7 @@
 		</button>
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<!-- Search Form -->
 				<form
 					class="search-bar d-flex"
 					onsubmit="return executeSearch();"
@@ -37,6 +39,7 @@
 						Search
 					</button>
 				</form>
+				<!-- Public Chat Button -->
 				<li class="nav-item">
 					<a
 						class="nav-link active underline_hover"
@@ -70,13 +73,25 @@
 					<a class="nav-link disabled">Disabled</a>
 				</li>
 			</ul>
-			<div class="btn-group dropstart">
 			{% if request.user.is_authenticated %}
+				<!-- Post Button -->
+				<div class="btn-group">
+					<button class="btn btn-dark">
+						<a style="text-decoration: none; color: var(--main-text-color);" href="{% url 'posts:create_post' %}">
+							<span class="material-icons">
+								post_add
+							</span>
+						</a>
+					</button>
+				</div>
+			<div class="btn-group dropstart" role="group">
+				<!-- Profile Picture Dropdown -->
 				<button
-					class="btn btn-secondary dropdown-toggle"
+					class="btn btn-dark"
 					type="button"
 					id="id_profile_image_dropdown_button"
 					data-bs-toggle="dropdown"
+					aria-haspopup="true"
 					aria-expanded="false"
 				>
 					<img
@@ -93,7 +108,6 @@
 					aria-labelledby="id_profile_image_dropdown_button"
 				>
 					<li><a class="dropdown-item" href="{% url 'account:profile' user_id=request.user.pk %}">Account</a></li>
-					<li><a href="{% url 'posts:create_post' %}" class="dropdown-item">Create Post</a></li>
 					<li><hr class="dropdown-divider" /></li>
 					{% if request.user.is_admin %}
 						<li><a href="{% url 'admin:index' %}" class="dropdown-item">Admin</a></li>

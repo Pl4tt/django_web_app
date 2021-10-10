@@ -55,6 +55,19 @@
         </div>
         <div class="card-body">
             <p>{{post.0.content}}</p>
+            {% if post.0.comments|length > 0 %}
+            <p class="card-text text-muted">comments exist</p>
+            {% else %}
+            <p class="card-text text-muted">No comments :(</p>
+            {% endif %}
+            <form onsubmit="commentPost({{post.0.pk}}); return false;">
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control custom-dark-input" id="id_comment_message_input_{{post.0.pk}}" placeholder="Comment something">
+                    <button type="submit" id="id_send_message" class="btn btn-outline-primary">
+                        <span class="material-icons"> send </span>
+                    </button>
+                </div>
+            </form>
         </div>
         <div class="card-footer text-muted d-flex justify-content-between align-items-center">
             <p class="card-text">{{post.0.date_created}}</p>
@@ -85,15 +98,26 @@
         fetch("{% url 'posts:like_post' post_id=1234 %}".replace("1234", postId.toString(), {method: "POST"}))
             .then((res) => res.json())
             .then((data) => {
-                likeCount.innerHTML = data["likes"];
-                console.log(data)
+                likeCount.innerHTML = data["like_count"];
+                
                 if (data["liked"] === true) {
                     likePicture.innerHTML = "thumb_up";
                 } else {
                     likePicture.innerHTML = "thumb_up_off_alt";
                 }
             })
-            .catch((e) => alert("Error while trying to like the post :("));
+            .catch((e) => alert("Error executed while trying to like the Post :("));
+    }
+
+    function commentPost(postId) {
+        const commentContent = document.querySelector(`#id_comment_message_input_${postId}`).value;
+
+        fetch("{% url 'posts:comment_post' post_id=1234 comment_content=5678 %}".replace("1234", postId.toString().replace("5678", commentContent.toString(), {method: "POST"})))
+            .then((res) => res.json())
+            .then((data) => {
+                console.log(data["comment_count"]);
+            })
+            .catch((e) => console.log("Error executed while trying to comment the Post :("))
     }
 </script>
 {% endblock content %}

@@ -84,7 +84,7 @@ def delete_post(request: Any, post_id: int) -> Union[HttpResponse, HttpResponseR
         return redirect(destination)
     return redirect("posts:home")
 
-def like_post(request: Any, post_id: int) -> JsonResponse:
+def like_post(request: Any, post_id: int) -> Union[JsonResponse, HttpResponse]:
     """
     Returns a json response containing a boolean if the user has liked the post and the number of likes.
     """
@@ -92,15 +92,14 @@ def like_post(request: Any, post_id: int) -> JsonResponse:
     if not user.is_authenticated:
         return redirect("account:login")
     
-    post = Post.objects.get(pk=post_id)
-    like = Like.objects.filter(author=user, post=post)
-
-    print(post.likes.all())
-
-    if not post:
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
         return render(request, "error.html", {
             "error_message": "Post doesn't exist."
         })
+        
+    like = Like.objects.filter(author=user, post=post)
     
     if like:
         like.delete()
@@ -108,9 +107,39 @@ def like_post(request: Any, post_id: int) -> JsonResponse:
         like = Like(post=post, author=user)
         like.save()
         
-    ret_json = {
-        "likes": len(post.likes.all()),
+    json_data = {
+        "like_count": len(post.likes.all()),
         "liked": check_likes(user, post),
     }
     
-    return JsonResponse(ret_json)
+    return JsonResponse(json_data)
+
+def comment_post(request: Any, post_id: int, comment_content: str) -> Union[JsonResponse, HttpResponse]:
+    """
+    Returns a json response containing the new length of all comments in this post the comment itself if the user and post exist.
+    """
+    user = request.user
+    if not user.is_authenticated:
+        return redirect("account:login")
+    
+    try:
+        post = Post.objects.get(pk=post_id)
+    except Post.DoesNotExist:
+        return render(request, "error.html", {
+            "error_message": "Post doesn't exist."
+        })
+    
+    comment = Comment(content=comment_content, author=user, post=post)
+    comment.save()
+
+    json_data = {
+        "comment_count": len(post.comments.all()),
+        "comment_content": comment.content,
+        "comment_author_username": comment.author.username,
+        "comment_author_pk": comment.author.pk,
+        "comment_author_profile_image_url": comment.author.profile_image.url,
+        "comment_post_pk": comment.post.pk,
+        "comment_date_created": comment.date_created,
+    }
+
+    return JsonResponse(json_data)
