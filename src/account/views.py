@@ -100,7 +100,7 @@ def user_posts(request: Any, user_id: int) -> HttpResponse:
     context["user"] = user
     context["posts"] = [] # ((Post): post, (bool): user has liked post)
     
-    for post in reversed(user.posts.all()):
+    for post in user.posts.all():
         context["posts"].append((post, check_likes(request.user, post)))
 
     return render(request, "posts/post_view.html", context)
@@ -119,7 +119,7 @@ def user_likes(request: Any, user_id: int) -> HttpResponse:
     context["user"] = user
     context["posts"] = [] # ((Post): post, (bool): user has liked post)
     
-    for like in reversed(user.likes.all()):
+    for like in reversed(sorted(user.likes.all(), key=lambda like: like.post.date_created)):
         context["posts"].append((like.post, check_likes(request.user, like.post)))
 
     return render(request, "posts/post_view.html", context)

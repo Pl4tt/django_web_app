@@ -46,6 +46,7 @@ def create_post(request: Any) -> Union[HttpResponse, HttpResponseRedirect]:
 
     if request.POST:
         post_content = request.POST["post_content"]
+        post_content = post_content.strip()
 
         if not post_content:
             return render(request, "posts/create_post.html", context)
@@ -84,7 +85,7 @@ def delete_post(request: Any, post_id: int) -> Union[HttpResponse, HttpResponseR
         return redirect(destination)
     return redirect("posts:home")
 
-def like_post(request: Any, post_id: int) -> Union[JsonResponse, HttpResponse]:
+def like_post(request: Any, post_id: int) -> Union[JsonResponse, HttpResponse, HttpResponseRedirect]:
     """
     Returns a json response containing a boolean if the user has liked the post and the number of likes.
     """
@@ -114,13 +115,21 @@ def like_post(request: Any, post_id: int) -> Union[JsonResponse, HttpResponse]:
     
     return JsonResponse(json_data)
 
-def comment_post(request: Any, post_id: int, comment_content: str) -> Union[JsonResponse, HttpResponse]:
+def comment_post(request: Any, post_id: int, comment_content: str) -> Union[JsonResponse, HttpResponse, HttpResponseRedirect]:
     """
     Returns a json response containing the new length of all comments in this post the comment itself if the user and post exist.
     """
     user = request.user
     if not user.is_authenticated:
         return redirect("account:login")
+
+    comment_content = comment_content.strip()
+
+    if not comment_content:
+        destination = get_past_position(request)
+        if destination:
+            return redirect(destination)
+        return redirect("posts:home")
     
     try:
         post = Post.objects.get(pk=post_id)
@@ -138,7 +147,6 @@ def comment_post(request: Any, post_id: int, comment_content: str) -> Union[Json
         "comment_author_username": comment.author.username,
         "comment_author_pk": comment.author.pk,
         "comment_author_profile_image_url": comment.author.profile_image.url,
-        "comment_post_pk": comment.post.pk,
         "comment_date_created": comment.date_created,
     }
 

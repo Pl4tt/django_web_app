@@ -26,6 +26,22 @@
     #id_like_picture {
         vertical-align: middle;
     }
+    #id_comment_author_link {
+        text-decoration: none;
+        color: var(--main-text-color);
+    }
+    #id_comment_author_link:hover {
+        text-decoration: underline;
+    }
+    #id_comment_author_profile_img {
+        border-radius: 50%;
+        vertical-align: middle;
+        display: inline;
+    }
+    #id_comment_author_username {
+        vertical-align: middle;
+        display: inline;
+    }
 </style>
 <div class="container">
     {% for post in posts %}
@@ -55,19 +71,38 @@
         </div>
         <div class="card-body">
             <p>{{post.0.content}}</p>
-            {% if post.0.comments|length > 0 %}
-            <p class="card-text text-muted">comments exist</p>
-            {% else %}
-            <p class="card-text text-muted">No comments :(</p>
-            {% endif %}
             <form onsubmit="commentPost({{post.0.pk}}); return false;">
                 <div class="input-group mb-3">
-                    <input type="text" class="form-control custom-dark-input" id="id_comment_message_input_{{post.0.pk}}" placeholder="Comment something">
-                    <button type="submit" id="id_send_message" class="btn btn-outline-primary">
+                    <input type="text" class="form-control custom-dark-input" id="id_comment_content_input_{{post.0.pk}}" placeholder="Comment something">
+                    <button type="submit" id="id_post_comment_button" class="btn btn-outline-primary">
                         <span class="material-icons"> send </span>
                     </button>
                 </div>
             </form>
+            {% if post.0.comments.all %}
+                <a class="btn btn-primary" id="id_comment_dropdown_button_{{post.0.pk}}" onclick="collapseComments({{post.0.pk}});" data-bs-toggle="collapse" href="#id_comment_dropdown_{{post.0.pk}}" role="button" aria-expanded="false" aria-controls="id_comment_dropdown_{{post.0.pk}}">
+                    show {{post.0.comments.all|length}} comments
+                </a>
+                <div class="collapse" id="id_comment_dropdown_{{post.0.pk}}">
+                    <div class="card text-white bg-dark card-body" id="id_comment_holder_{{post.0.pk}}">
+                        {% for comment in post.0.comments.all|slice:"::-1" %}
+                        <div>
+                            <div class="card-text">
+                                <a id="id_comment_author_link" href="{% url 'account:profile' user_id=comment.author.pk %}">
+                                    <img id="id_comment_author_profile_img" src="{{ comment.author.profile_image.url }}" alt="Logo" width="20px" height="20px">
+                                    <p id="id_comment_author_username">{{ comment.author.username }}: {{ comment.content }}</p>
+                                </a>
+                            </div>
+                            <small class="text-muted">{{comment.date_created}}</small>
+                            <br>
+                            <br>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <p class="card-text text-muted">No comments :(</p>
+            {% endif %}
         </div>
         <div class="card-footer text-muted d-flex justify-content-between align-items-center">
             <p class="card-text">{{post.0.date_created}}</p>
@@ -110,14 +145,70 @@
     }
 
     function commentPost(postId) {
-        const commentContent = document.querySelector(`#id_comment_message_input_${postId}`).value;
+        const commentInputField = document.querySelector(`#id_comment_content_input_${postId}`);
+        const commentContent = commentInputField.value;
+        const collapseCommentsButton = document.querySelector(`#id_comment_dropdown_button_${postId}`);
+        const allCommentHolder = document.querySelector(`#id_comment_holder_${postId}`)
 
-        fetch("{% url 'posts:comment_post' post_id=1234 comment_content=5678 %}".replace("1234", postId.toString().replace("5678", commentContent.toString(), {method: "POST"})))
+        fetch("{% url 'posts:comment_post' post_id=1234 comment_content=5678 %}".replace("1234", postId.toString()).replace("5678", commentContent.toString(), {method: "POST"}))
             .then((res) => res.json())
             .then((data) => {
-                console.log(data["comment_count"]);
+                collapseCommentsButton.innerHTML = collapseCommentsButton.innerHTML.replace(new RegExp("[0-9]+", "i"), data["comment_count"])
+
+                var commentHolder = document.createElement("div")
+
+                var breakElement = document.createElement("br")
+                var breakElement2 = document.createElement("br")
+
+                var footerText = document.createElement("small", {
+                    class: "text-muted",
+                })
+                footerText.innerHTML = data["comment_date_created"]
+
+                var authorSection = document.createElement("div", {
+                    class: "card-text"
+                })
+                var authorLink = document.createElement("a", {
+                    id: "id_comment_author_link",
+                    href: "{% url 'account:profile' user_id=1234 %}".replace("1234", data["comment_author_pk"]),
+                })
+                var authorImage = document.createElement("img", {
+                    id: "id_comment_author_profile_img",
+                    src: data["comment_author_profile_image_url"],
+                    alt: "Logo",
+                    width: "20px",
+                    height: "20px",
+                    style: "border-radius: 50%;"
+                })
+                var authorUsernameContent = document.createElement("p", {
+                    id: "id_comment_author_username",
+                })
+                authorUsernameContent.innerHTML = `${data["comment_author_username"]}: ${data["comment_content"]}`
+                
+                authorLink.appendChild(authorImage)
+                authorLink.appendChild(authorUsernameContent)
+                authorSection.appendChild(authorLink)
+                commentHolder.appendChild(authorSection)
+
+                commentHolder.appendChild(footerText)
+                commentHolder.appendChild(breakElement)
+                commentHolder.appendChild(breakElement2)
+
+                allCommentHolder.insertBefore(commentHolder, allCommentHolder.firstChild)
             })
-            .catch((e) => console.log("Error executed while trying to comment the Post :("))
+            .catch((e) => console.log("Error executed while trying to comment the Post :(", e))
+
+        commentInputField.value = ""
+    }
+
+    function collapseComments(postId) {
+        const collapseButton = document.querySelector(`#id_comment_dropdown_button_${postId}`);
+
+        if (collapseButton.innerHTML.trim().slice(0, 4) == "show") {
+            collapseButton.innerHTML = collapseButton.innerHTML.replace("show", "hide");
+        } else {
+            collapseButton.innerHTML = collapseButton.innerHTML.replace("hide", "show");
+        }
     }
 </script>
 {% endblock content %}
