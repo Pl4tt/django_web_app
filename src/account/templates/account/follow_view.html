@@ -19,12 +19,12 @@
     <div class="card text-white bg-dark">
         <div class="card-header"><p>{{what}} of {{user.username}}</p></div>
         <div class="card-body">
-            {% for user in list %}
-                <a href="{% url 'account:profile' user_id=user.pk %}" style="text-decoration: none; color: var(--main-text-color);">
+            {% for user_item in list %}
+                <a href="{% url 'account:profile' user_id=user_item.pk %}" style="text-decoration: none; color: var(--main-text-color);">
                     <div class="card text-white bg-dark">
                         <div class="card-header">
-                            <img src="{{user.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
-                            <h6 class="card-text" id="id_author_username">{{user.username}}</h6>
+                            <img src="{{user_item.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
+                            <h6 class="card-text" id="id_author_username">{{user_item.username}}</h6>
                         </div>
                     </div>
                 </a>

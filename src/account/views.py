@@ -240,6 +240,25 @@ def follow(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedire
 
 def follow_view(request: Any, user_id: int, what: str) -> HttpResponse:
     """
-    (what = follower/following etc.)
+    If what == "follower": Returns a view of all the users that follow the user (with pk=user_id).
+    If what == "following": Returns a view of all the users that the user (with pkk=user_id) is following.
     """
-    pass
+    context = {}
+    try:
+        user = Account.objects.get(pk=user_id)
+    except Account.DoesNotExist:
+        return render(request, "error.html", {
+            "error_message": "User doesn't exist."
+        })
+
+    if what == "follower":
+        context["list"] = list(map(lambda follow: getattr(follow, "following_user"), getattr(user, what).all()))
+    elif what == "following":
+        context["list"] = list(map(lambda follow: getattr(follow, "followed_user"), getattr(user, what).all()))
+    else:
+        return render(request, "404.html")
+
+    context["what"] = what
+    context["user"] = user
+    
+    return render(request, "account/follow_view.html", context)

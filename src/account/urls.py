@@ -16,5 +16,5 @@ urlpatterns = [
     path("settings/<int:user_id>/", views.settings, name="settings"),
     path("search/", views.search, name="search"),
     path("follow/<int:user_id>/", views.follow, name="follow"),
-    path("follow-view/<int:user_id>/<str:what>/", views-follow_view, name="follow_view")
+    path("follow-view/<int:user_id>/<str:what>/", views.follow_view, name="follow_view")
 ]
