@@ -53,13 +53,14 @@ class AccountAuthenticationForm(forms.ModelForm):
 class AccountUpdateForm(forms.ModelForm):
     class Meta:
         model = Account
-        fields = ("biography", "username", "email")
+        fields = ("biography", "username", "email", "hide_email")
 
     def save(self, commit=True):
         account = super(AccountUpdateForm, self).save(commit=False)
         account.biography = self.cleaned_data["biography"]
         account.username = self.cleaned_data["username"]
         account.email = self.cleaned_data["email"].lower()
+        account.hide_email = self.cleaned_data["hide_email"]
 
         if commit:
             account.save()

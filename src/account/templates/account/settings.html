@@ -39,7 +39,7 @@
                 <p class="card-text">Email Address:</p>
                 <input name="email" class="card-text form-control me-2 custom-dark-input" value="{{user.email}}">
                 <br>
-                <input name="hide_email" type="checkbox" checked="{{user.hide_email}}" id="id_hide_email">
+                <input name="hide_email" type="checkbox" id="id_hide_email" {% if user.hide_email %}checked{% endif %}>
                 <label class="form-check-label" for="id_hide_email">
                     Hide Email
                 </label>
