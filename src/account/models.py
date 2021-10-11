@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 
+from friend.models import FriendList
+
 
 class AccountManager(BaseUserManager):
     def create_user(self, username, email, password):
@@ -17,6 +19,9 @@ class AccountManager(BaseUserManager):
         user = self.model(email=self.normalize_email(email), username=username)
         user.set_password(password)
         user.save(using=self._db)
+
+        friend_list = FriendList.objects.get_or_create(user=user)
+        friend_list.save()
 
         return user
 

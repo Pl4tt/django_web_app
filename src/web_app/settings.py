@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     "account",
     "chat",
     "posts",
+    "friend",
 
     "channels",
 ]
