@@ -13,6 +13,7 @@
 
 </style>
 
+<br>
 <div class="container">
     <div class="card-group text-white bg-dark p-3 row">
         {% for user in search_results %}
@@ -33,7 +34,7 @@
                     </div>
                 </div>
                 <div class="card-footer">
-                    <small class="text-muted">Member since {{ user.0.date_created }}</small>
+                    <small class="text-muted">Member since {{ user.0.date_created }} (UTC)</small>
                 </div>
             </div>
             </div>

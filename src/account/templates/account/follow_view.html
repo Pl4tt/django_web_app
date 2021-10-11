@@ -15,6 +15,7 @@
     }
 </style>
 
+<br>
 <div class="container">
     <div class="card text-white bg-dark">
         <div class="card-header"><p>{{what.title}} of {{user.username}}</p></div>
@@ -30,7 +31,7 @@
                         </div>
                     </a>
                     <div class="card-text">
-                        <small class="text-muted">{{what.title}} since {{follow.date_created}}</small>
+                        <small class="text-muted">{{what.title}} since {{follow.date_created}} (UTC)</small>
                     </div>
                 </div>
             {% empty %}

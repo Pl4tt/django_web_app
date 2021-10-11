@@ -25,7 +25,7 @@
                 {% endif %}
                 <br>
                 {% if request.user in follower %}
-                    <a href="{% url 'account:follow' user_id=user.pk %}" class="btn btn-primary" disabled>Followed</a>
+                    <a href="{% url 'account:follow' user_id=user.pk %}" class="btn btn-primary">Followed</a>
                 {% else %}
                     <a href="{% url 'account:follow' user_id=user.pk %}" class="btn btn-outline-primary">Follow</a>
                 {% endif %}
@@ -72,7 +72,7 @@
             </a>
         </div>
         <div class="card-footer">
-            <p class="text-muted">Member since {{ user.date_created }}</p>
+            <p class="text-muted">Member since {{ user.date_created }} (UTC)</p>
         </div>
     </div>
 </div>

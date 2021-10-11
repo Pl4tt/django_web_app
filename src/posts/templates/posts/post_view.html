@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock title %}
 {% load static %}
+{% load humanize %}
 
 {% block content %}
 <style>
@@ -95,7 +96,7 @@
                                 <p id="id_comment_author_username">{{ comment.author.username }}: {{ comment.content }}</p>
                             </a>
                         </div>
-                        <small class="text-muted">{{comment.date_created}}</small>
+                        <small class="text-muted">{{comment.date_created|naturaltime}}</small>
                         <br>
                         <br>
                     </div>
@@ -104,7 +105,7 @@
             </div>
         </div>
         <div class="card-footer text-muted d-flex justify-content-between align-items-center">
-            <p class="card-text">{{post.0.date_created}}</p>
+            <p class="card-text">{{post.0.date_created|naturaltime}}</p>
             <div class="dropdown">
                 <button class="btn btn-dark" id="id_like_button" onclick="likePost({{post.0.pk}});">
                     <p id="id_like_count_{{post.0.pk}}" style="vertical-align: middle; display: inline;">{{post.0.likes.all|length}}</p>
