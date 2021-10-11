@@ -30,7 +30,7 @@
 						id="id_chat_content"
 						rows="18"
 						readonly
-					></textarea>
+					>{% for message in messages %}{{message.author}}: {{message.content}}&#13;&#10;{% endfor %}</textarea>
 				</div>
 				<div class="input-group mb-3">
 					<input class="form-control shadow p-3 mb-5 custom-dark-input" id="id_message_input" placeholder="Enter Message" type="text" />
@@ -44,7 +44,6 @@
 </div>
 
 {{ request.user.username|json_script:"user_username" }}
-{{ messages|json_script:"messages" }}
 <script>
 
     const user_username = JSON.parse(document.getElementById("user_username").textContent);
@@ -54,14 +53,12 @@
         window.location.host +
         "/ws/chat/public/"
     )
-	var messages = JSON.parse(document.getElementById("messages").textContent);
 
-	function loadPage() {
-		for (message of messages) {
-			chatarea.value += (message + ": " + message + "\n")
-		}
+	function scrollBottom() {
+		chatarea.scrollTop = chatarea.scrollHeight;
 	}
-	loadPage();
+	scrollBottom();
+
 
     function sendMessage() {
         const messageInput = document.querySelector("#id_message_input");
@@ -69,7 +66,7 @@
 
         chatSocket.send(JSON.stringify({
             "message": message,
-            "username": user_username
+            "username": user_username,
         }))
         messageInput.value = "";
 		return false;
@@ -81,7 +78,7 @@
         const data = JSON.parse(e.data);
         if (data.message) {
             chatarea.value += (data.username + ": " + data.message + "\n");
-			chatarea.scrollTop = chatarea.scrollHeight;
+			scrollBottom();
         }
     }
 </script>
