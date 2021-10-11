@@ -151,3 +151,36 @@ def comment_post(request: Any, post_id: int, comment_content: str) -> Union[Json
     }
 
     return JsonResponse(json_data)
+
+def edit_post(request: Any, post_id: int, new_post_content: str) -> Union[JsonResponse, HttpResponse, HttpResponseRedirect]:
+    """
+    Changes the content of the post with pk=post_id and returns a json response containing the new post content
+    if the user is allowed to do that.
+    """
+    user = request.user
+
+    if not user.is_authenticated:
+        return redirect("account:login")
+
+    try:
+        post = Post.objects.get(id=post_id)
+    except Post.DoesNotExist:
+        return render(request, "error.html", {
+            "error_message": "The Post you tried to edit doesn't exist."
+        })
+    
+    if user.pk != post.author.pk:
+        return render(request, "error.html", {
+            "error_message": "You are not allowed to edit someone else's post."
+        })
+    
+    new_post_content = new_post_content.strip()
+
+    post.content = new_post_content
+    post.save()
+
+    json_data = {
+        "new_content": new_post_content,
+    }
+
+    return JsonResponse(json_data)

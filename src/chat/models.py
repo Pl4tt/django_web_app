@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 
-# ctrl + K then ctrl + C to comment, ctrl + K then ctrl + U to uncomment
 
 class PublicMessage(models.Model):
     content = models.CharField(max_length=255)

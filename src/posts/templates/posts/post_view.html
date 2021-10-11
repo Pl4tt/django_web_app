@@ -63,7 +63,7 @@
                         </span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="id_option_dropdown">
-                        <li><a class="dropdown-item active" href="#">Edit</a></li>
+                        <li><button class="dropdown-item" onclick="editPost({{post.0.pk}});">Edit</button></li>
                         <li><a class="dropdown-item" href="{% url 'posts:delete_post' post_id=post.0.pk %}">Delete</a></li>
                         <li><a class="dropdown-item" href="#">Something else here</a></li>
                         <li><hr class="dropdown-divider"></li>
@@ -72,8 +72,8 @@
                 </div>
             {% endif %}
         </div>
-        <div class="card-body">
-            <p>{{post.0.content}}</p>
+        <div class="card-body" id="id_post_body_{{post.0.pk}}">
+            <p id="id_post_content_{{post.0.pk}}">{{post.0.content}}</p>
             <form onsubmit="commentPost({{post.0.pk}}); return false;">
                 <div class="input-group mb-3">
                     <input type="text" class="form-control custom-dark-input" id="id_comment_content_input_{{post.0.pk}}" placeholder="Comment something">
@@ -140,7 +140,7 @@
                     likePicture.innerHTML = "thumb_up_off_alt";
                 }
             })
-            .catch((e) => alert("Error executed while trying to like the Post :("));
+            .catch((e) => alert("An error executed while trying to like the Post :("));
     }
 
     
@@ -193,7 +193,7 @@
 
                 allCommentHolder.insertBefore(commentHolder, allCommentHolder.firstChild)
             })
-            .catch((e) => console.log("Error executed while trying to comment the Post :(", e))
+            .catch((e) => alert("An error executed while trying to comment the Post :("))
 
         commentInputField.value = ""
     }
@@ -208,6 +208,54 @@
         }
     }
     
+
+    function editPost(postId) {
+        var postContent = document.querySelector(`#id_post_content_${postId}`);
+        var postBody = document.querySelector(`#id_post_body_${postId}`);
+
+        var inputField = document.createElement("textarea")
+        inputField.setAttribute("class", "form-control custom-dark-input")
+        inputField.setAttribute("type", "text")
+        inputField.setAttribute("placeholder", "Edit post")
+        inputField.setAttribute("style", "height: 300px;")
+        inputField.setAttribute("id", `id_edit_post_input_${postId}`)
+        inputField.innerHTML = postContent.innerHTML
+        
+        var inputButton = document.createElement("button")
+        inputButton.setAttribute("type", "button")
+        inputButton.setAttribute("onclick", `submitEditPost(${postId}); this.disabled = true;`)
+        inputButton.setAttribute("class", "btn btn-outline-primary")
+
+        var sendSpan = document.createElement("span")
+        sendSpan.setAttribute("class", "material-icons")
+        sendSpan.innerHTML = " send "
+        
+        postBody.removeChild(postContent)
+
+        inputButton.appendChild(sendSpan)
+        postBody.insertBefore(inputButton, postBody.firstChild)
+        postBody.insertBefore(inputField, postBody.firstChild)
+    }
+
+    function submitEditPost(postId) {
+        const postInput = document.querySelector(`#id_edit_post_input_${postId}`);
+        var postBody = document.querySelector(`#id_post_body_${postId}`);
+
+        fetch("{% url 'posts:edit_post' post_id=1234 new_post_content=5678 %}".replace("1234", postId.toString()).replace("5678", postInput.value, {method: "POST"}))
+            .then((res) => res.json())
+            .then((data) => {
+                var postContent = document.createElement("p")
+                postContent.setAttribute("id", `id_post_content_${postId}`)
+                postContent.innerHTML = data["new_content"]
+
+                postBody.removeChild(postBody.firstChild);
+                postBody.removeChild(postBody.firstChild);
+
+                postBody.insertBefore(postContent, postBody.firstChild)
+            })
+            .catch((e) => alert("An error executed while trying to edit the post :("))
+
+    }
 </script>
 
 {% endblock content %}
