@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% block title %}{{what}} of {{user.username}}{% endblock title %}
+{% block title %}{{what.title}} of {{user.username}}{% endblock title %}
 {% load static %}
 
 {% block content %}
@@ -17,20 +17,28 @@
 
 <div class="container">
     <div class="card text-white bg-dark">
-        <div class="card-header"><p>{{what}} of {{user.username}}</p></div>
+        <div class="card-header"><p>{{what.title}} of {{user.username}}</p></div>
         <div class="card-body">
-            {% for user_item in list %}
-                <a href="{% url 'account:profile' user_id=user_item.pk %}" style="text-decoration: none; color: var(--main-text-color);">
-                    <div class="card text-white bg-dark">
-                        <div class="card-header">
-                            <img src="{{user_item.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
-                            <h6 class="card-text" id="id_author_username">{{user_item.username}}</h6>
+            {% for follow, user_item in list %}
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'account:profile' user_id=user_item.pk %}" style="text-decoration: none; color: var(--main-text-color);">
+                        <div class="card text-white bg-dark">
+                            <div class="card-header">
+                                <img src="{{user_item.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
+                                <h6 class="card-text" id="id_author_username">{{user_item.username}}</h6>
+                            </div>
                         </div>
+                    </a>
+                    <div class="card-text">
+                        <small class="text-muted">{{what.title}} since {{follow.date_created}}</small>
                     </div>
-                </a>
+                </div>
             {% empty %}
-                <p>No {{what}} :((</p>
+                <p>No {{what.title}}s :((</p>
             {% endfor %}
+            <div class="card-footer" align="center">
+                No more {{what.title}}s :(
+            </div>
         </div>
     </div>
 </div>

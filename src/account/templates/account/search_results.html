@@ -14,13 +14,14 @@
 </style>
 
 <div class="container">
-    <div class="card text-white bg-dark p-3">
+    <div class="card-group text-white bg-dark p-3 row">
         {% for user in search_results %}
+        <div class="col-lg-6 mb-4">
         <div class="card text-white bg-dark mb-3" style="max-width: 540px;">
             <div class="row g-0">
                 <div class="col-md-4">
                     <a href="{% url 'account:profile' user_id=user.0.pk %}">
-                        <img src="{{user.0.profile_image.url}}" class="img-fluid rounded-start" alt="Profile">
+                        <img src="{{user.0.profile_image.url}}" class="img-fluid rounded-start" alt="Profile" height="200px" width="200px">
                     </a>
                 </div>
                 <div class="col-md-8">
@@ -34,6 +35,7 @@
                 <div class="card-footer">
                     <small class="text-muted">Member since {{ user.0.date_created }}</small>
                 </div>
+            </div>
             </div>
         </div>
         {% empty %}

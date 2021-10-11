@@ -45,7 +45,7 @@ def create_post(request: Any) -> Union[HttpResponse, HttpResponseRedirect]:
         return redirect("account:login")
 
     if request.POST:
-        post_content = request.POST["post_content"]
+        post_content = request.POST.get("post_content")
         post_content = post_content.strip()
 
         if not post_content:

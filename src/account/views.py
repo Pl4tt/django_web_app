@@ -31,8 +31,8 @@ def registration_view(request: Any, *args, **kwargs) -> Union[HttpResponse, Http
         form = RegistrationForm(request.POST)
         if form.is_valid():
             form.save()
-            email = form.cleaned_data["email"]
-            password = form.cleaned_data["password1"]
+            email = form.cleaned_data.get("email")
+            password = form.cleaned_data.get("password1")
             account = authenticate(email=email, password=password)
             login(request, account)
             return redirect("posts:home")
@@ -54,8 +54,8 @@ def login_view(request: Any, *args, **kwargs) -> Union[HttpResponse, HttpRespons
     if request.POST:
         form = AccountAuthenticationForm(request.POST)
         if form.is_valid():
-            email = request.POST["email"].lower()
-            password = request.POST["password"]
+            email = request.POST.get("email").lower()
+            password = request.POST.get("password")
             account = authenticate(email=email, password=password)
             if account:
                 login(request, account)
@@ -192,7 +192,7 @@ def search(request: Any, *args, **kwargs) -> HttpResponse:
     context = {}
 
     if request.GET:
-        query = request.GET["q"]
+        query = request.GET.get("q")
         accounts = Account.objects.filter(username__icontains=query).distinct()
         search_results = []
 
@@ -252,9 +252,9 @@ def follow_view(request: Any, user_id: int, what: str) -> HttpResponse:
         })
 
     if what == "follower":
-        context["list"] = list(map(lambda follow: getattr(follow, "following_user"), getattr(user, what).all()))
+        context["list"] = zip(getattr(user, what).all(), list(map(lambda follow: getattr(follow, "following_user"), getattr(user, what).all())))
     elif what == "following":
-        context["list"] = list(map(lambda follow: getattr(follow, "followed_user"), getattr(user, what).all()))
+        context["list"] = zip(getattr(user, what).all(), list(map(lambda follow: getattr(follow, "followed_user"), getattr(user, what).all())))
     else:
         return render(request, "404.html")
 
