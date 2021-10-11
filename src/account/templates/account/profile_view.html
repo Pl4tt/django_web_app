@@ -71,6 +71,38 @@
                 </div>
             </a>
         </div>
+        <div class="card text-white bg-dark">
+            <div class="card-header">Friend Zone</div>
+            <div class="card-body">
+                {% if is_friend or is_self %}
+                <a href="{% url 'friend:friend_list' user_id=user.pk %}" style="text-decoration: none;">
+                    <div class="card text-white bg-dark">
+                        <div class="card-header">
+                            Friend List - {{user.friend_list.friends.all|length}}
+                        </div>
+                    </div>
+                </a>
+                {% else %}
+                <div class="card text-white bg-dark">
+                    <div class="card-header">This guy is not your Friend :(</div>
+                </div>
+                {% endif %}
+                {% if is_self %}
+                <p>You're a friend of Yourself :)</p>
+                {% elif is_friend %}
+                <a href="{% url 'friend:unfriend' user_id=user.pk %}" class="btn btn-primary">Unfriend</a>
+                {% elif is_friend_requesting %}
+                <a href="{% url 'friend:accept_request' user_id=user.pk %}" class="btn btn-success">Accept Friend Request</a>
+                <a href="{% url 'friend:decline_request' user_id=user.pk %}" class="btn btn-outline-danger">Decline Friend Request</a>
+                {% elif is_friend_requested %}
+                <a href="{% url 'friend:cancel_request' user_id=user.pk %}" class="btn btn-danger">Cancel Friend Request</a>
+                {% else %}
+                <a href="{% url 'friend:create_request' user_id=user.pk %}" class="btn btn-outline-primary">Send Friend Request</a>
+                {% endif %}
+
+                
+            </div>
+        </div>
         <div class="card-footer">
             <p class="text-muted">Member since {{ user.date_created }} (UTC)</p>
         </div>

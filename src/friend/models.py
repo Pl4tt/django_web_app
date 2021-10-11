@@ -68,11 +68,11 @@ class FriendRequest(models.Model):
 
             self.save()
 
-    def activate(self):
+    def reactivate(self):
         """
         Executes when the sender sends a friend request to the receiver again, sets is_active to true.
         """
-        self.is_activate = True
+        self.is_active = True
 
         self.save()
 

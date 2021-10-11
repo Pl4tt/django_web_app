@@ -3,6 +3,7 @@ from typing import Union, Any
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.shortcuts import render, redirect
 from django.conf import settings
+from django.contrib.auth.decorators import login_required
 
 from .models import Post, Comment, Like
 
@@ -33,16 +34,14 @@ def home_view(request: Any) -> HttpResponse:
 
     return render(request, "posts/post_view.html", context)
 
-def create_post(request: Any) -> Union[HttpResponse, HttpResponseRedirect]:
+@login_required
+def create_post(request: Any) -> HttpResponse:
     """
     Returns the view where useres can create posts if they are authenticated.
     After they've created their post, the will be redirected to the home view.
     """
     context = {}
     user = request.user
-
-    if not user.is_authenticated:
-        return redirect("account:login")
 
     if request.POST:
         post_content = request.POST.get("post_content")
@@ -57,14 +56,13 @@ def create_post(request: Any) -> Union[HttpResponse, HttpResponseRedirect]:
     
     return render(request, "posts/create_post.html", context)
 
-def delete_post(request: Any, post_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
+@login_required
+def delete_post(request: Any, post_id: int) -> Union[HttpResponseRedirect, HttpResponse]:
     """
     Deletes the post with the given id if it exists and user is authenticated and redirects User to his past url.
     """
     user = request.user
 
-    if not user.is_authenticated:
-        redirect("account:login")
 
     try:
         post = Post.objects.get(pk=post_id)
@@ -85,13 +83,12 @@ def delete_post(request: Any, post_id: int) -> Union[HttpResponse, HttpResponseR
         return redirect(destination)
     return redirect("posts:home")
 
-def like_post(request: Any, post_id: int) -> Union[JsonResponse, HttpResponse, HttpResponseRedirect]:
+@login_required
+def like_post(request: Any, post_id: int) -> Union[JsonResponse, HttpResponse]:
     """
     Returns a json response containing a boolean if the user has liked the post and the number of likes.
     """
     user = request.user
-    if not user.is_authenticated:
-        return redirect("account:login")
     
     try:
         post = Post.objects.get(pk=post_id)
@@ -115,13 +112,12 @@ def like_post(request: Any, post_id: int) -> Union[JsonResponse, HttpResponse, H
     
     return JsonResponse(json_data)
 
+@login_required
 def comment_post(request: Any, post_id: int, comment_content: str) -> Union[JsonResponse, HttpResponse, HttpResponseRedirect]:
     """
     Returns a json response containing the new length of all comments in this post the comment itself if the user and post exist.
     """
     user = request.user
-    if not user.is_authenticated:
-        return redirect("account:login")
 
     comment_content = comment_content.strip()
 
@@ -152,15 +148,13 @@ def comment_post(request: Any, post_id: int, comment_content: str) -> Union[Json
 
     return JsonResponse(json_data)
 
+@login_required
 def edit_post(request: Any, post_id: int, new_post_content: str) -> Union[JsonResponse, HttpResponse, HttpResponseRedirect]:
     """
     Changes the content of the post with pk=post_id and returns a json response containing the new post content
     if the user is allowed to do that.
     """
     user = request.user
-
-    if not user.is_authenticated:
-        return redirect("account:login")
 
     try:
         post = Post.objects.get(id=post_id)

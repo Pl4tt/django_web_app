@@ -20,7 +20,8 @@ class AccountManager(BaseUserManager):
         user.set_password(password)
         user.save(using=self._db)
 
-        friend_list = FriendList.objects.get_or_create(user=user)
+        # TODO: doesn't work
+        friend_list = FriendList(user=user)
         friend_list.save()
 
         return user

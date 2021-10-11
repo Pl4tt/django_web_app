@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Friend List of {{user.username}}{% endblock title %}
+{% load static %}
+
+{% block content %}
+<style>
+    
+    #id_author_profile_img {
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+    #id_author_username {
+        vertical-align: middle;
+        display: inline;
+    }
+</style>
+
+<br>
+<div class="container">
+    <div class="card text-white bg-dark">
+        <div class="card-header"><p>Friend List of {{user.username}}</p></div>
+        <div class="card-body">
+            {% for friend in friend_list %}
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'account:profile' user_id=friend.pk %}" style="text-decoration: none; color: var(--main-text-color);">
+                        <div class="card text-white bg-dark">
+                            <div class="card-header">
+                                <img src="{{friend.profile_image.url}}" alt="Logo" width="40px" height="40px" id="id_author_profile_img">
+                                <h6 class="card-text" id="id_author_username">{{friend.username}}</h6>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="card-text">
+                        <small class="text-muted">Friend since idk :( (UTC)</small>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No Friends :((</p>
+            {% endfor %}
+            <div class="card-footer" align="center">
+                No more Friends :(
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

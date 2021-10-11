@@ -32,6 +32,8 @@ AUTHENTICATION_BACKENDS = (
     "django.contrib.auth.backends.AllowAllUsersModelBackend",
 )
 
+LOGIN_URL = "account:login"
+
 
 # Application definition
 

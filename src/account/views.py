@@ -3,8 +3,11 @@ from typing import Union, Any
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, logout, login
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.contrib.auth.decorators import login_required
 
 from posts.views import check_likes, get_past_position
+from friend.views import check_friend
+from friend.models import FriendRequest
 from .forms import AccountAuthenticationForm, RegistrationForm, AccountUpdateForm
 from .models import Account, Follow
 
@@ -77,11 +80,7 @@ def profile_view(request: Any, user_id: int) -> HttpResponse:
     Renders profile of user if user exists.
     """
     context = {}
-    user = request.user
-
-    context["is_self"] = False
-    if user.pk == user_id:
-        context["is_self"] = True
+    print(request.user.friend_list.friends.all())
 
     try:
         context["user"] = Account.objects.get(pk=user_id)
@@ -90,6 +89,18 @@ def profile_view(request: Any, user_id: int) -> HttpResponse:
             "error_message": "User doesn't exist."
         })
     
+    if request.user.is_authenticated:
+        context["is_self"] = request.user.pk == user_id
+        context["is_friend"] = check_friend(request.user, context["user"])
+        context["is_friend_requested"] = False
+        context["is_friend_requesting"] = False
+
+        if FriendRequest.objects.filter(sender=context["user"], receiver=request.user, is_active=True):
+            context["is_friend_requesting"] = True
+
+        if FriendRequest.objects.filter(sender=request.user, receiver=context["user"], is_active=True):
+            context["is_friend_requested"] = True
+
     context["follower"] = list(map(lambda follow: follow.following_user, context["user"].follower.all()))
         
     return render(request, "account/profile_view.html", context)
@@ -152,12 +163,11 @@ def user_comments(request: Any, user_id: int) -> HttpResponse:
     
     return render(request, "posts/post_view.html", context)
 
+@login_required
 def settings(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
     Renders the settings page from requested id if it's yourself and saves the changes if there are changes.
     """
-    if not request.user.is_authenticated:
-        return redirect("account:login")
 
     context = {}
     req_user = request.user
@@ -204,14 +214,13 @@ def search(request: Any, *args, **kwargs) -> HttpResponse:
     
     return render(request, "account/search_results.html", context)
 
+@login_required
 def follow(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
-    
+    Add the request user to the followers of the user with the given user_id.
+    Returns the given users profile view after that.
     """
     context = {}
-
-    if not request.user.is_authenticated:
-        return redirect("account:login")
 
     try:
         user = Account.objects.get(pk=user_id)
