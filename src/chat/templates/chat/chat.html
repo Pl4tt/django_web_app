@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+	#id_chat_content {
+		background-color: var(--bs-dark);
+		resize: none;
+        border: none;
+        color: var(--main-text-color);
+	}
+	#id_chat_content_label {
+		display: block;
+		text-align: center;
+	}
+	#id_message_input {
+		background: var(--bs-dark);
+		color: var(--main-text-color);
+		border: none;
+		border-bottom: 2px solid var(--bs-blue);
+	}
+</style>
+
+<div class="container">
+	<div class="row d-flex justify-content-center">
+		<div class="col-9">
+			<form onsubmit="return sendMessage();">
+				<div class="form-group">
+					<label for="id_chat_content" id="id_chat_content_label" class="h4 pt-5">{% block chat_name %}{% endblock chat_name %}</label>
+					<textarea
+						class="form-control shadow-lg p-3 mb-5"
+						id="id_chat_content"
+						rows="18"
+						readonly
+					>{% for message in messages %}{{message.author}}: {{message.content}}&#13;&#10;{% endfor %}</textarea>
+				</div>
+				<div class="input-group mb-3">
+					<input class="form-control shadow p-3 mb-5 custom-dark-input" id="id_message_input" placeholder="Enter Message" type="text" />
+					<button type="submit" id="id_send_message" class="btn btn-outline-primary shadow p-3 mb-5">
+						<span class="material-icons"> send </span>
+					</button>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
+
+{% block script %}
+{% endblock script %}
+
+{% endblock content %}

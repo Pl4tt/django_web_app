@@ -3,7 +3,7 @@ from django.conf import settings
 
 
 class FriendList(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="friend_list", on_delete=models.CASCADE)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name="friend_list", on_delete=models.CASCADE, unique=True)
     friends = models.ManyToManyField(settings.AUTH_USER_MODEL, blank=True, related_name="friends")
 
     def __str__(self):
