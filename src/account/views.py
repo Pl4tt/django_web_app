@@ -116,6 +116,7 @@ def user_posts(request: Any, user_id: int) -> HttpResponse:
             "error_message": "User doesn't exist."
         })
     context["user"] = user
+    context["title"] = f"Posts of {user.username}"
     context["posts"] = [] # ((Post): post, (bool): user has liked post)
     
     for post in user.posts.all():
@@ -135,6 +136,7 @@ def user_likes(request: Any, user_id: int) -> HttpResponse:
             "error_message": "User doesn't exist."
         })
     context["user"] = user
+    context["title"] = f"Liked Posts of {user.username}"
     context["posts"] = [] # ((Post): post, (bool): user has liked post)
     
     for like in reversed(sorted(user.likes.all(), key=lambda like: like.post.date_created)):
@@ -154,6 +156,7 @@ def user_comments(request: Any, user_id: int) -> HttpResponse:
             "error_message": "User does not exist."
         })
     context["user"] = user
+    context["title"] = f"Written Comments of {user.username}"
     context["posts"] = [] # ((Post): post, (bool): user has liked post)
 
     for comment in reversed(sorted(user.comments.all(), key=lambda comment: comment.post.date_created)):

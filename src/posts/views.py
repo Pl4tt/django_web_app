@@ -27,6 +27,7 @@ def home_view(request: Any) -> HttpResponse:
     Returns the view where all posts, comments etc. are viewed.
     """
     context = {}
+    context["title"] = f"Home"
     context["posts"] = [] # ((Post): post, (bool): user has liked post)
     
     for post in reversed(Post.objects.all()):
