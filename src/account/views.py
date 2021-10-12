@@ -80,7 +80,6 @@ def profile_view(request: Any, user_id: int) -> HttpResponse:
     Renders profile of user if user exists.
     """
     context = {}
-    print(request.user.friend_list.friends.all())
 
     try:
         context["user"] = Account.objects.get(pk=user_id)
