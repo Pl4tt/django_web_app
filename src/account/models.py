@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 from friend.models import FriendList
 
@@ -19,10 +21,6 @@ class AccountManager(BaseUserManager):
         user = self.model(email=self.normalize_email(email), username=username)
         user.set_password(password)
         user.save(using=self._db)
-
-        # TODO: doesn't work
-        friend_list = FriendList(user=user)
-        friend_list.save()
 
         return user
 
@@ -90,3 +88,8 @@ class Follow(models.Model):
     
     def __str__(self):
         return f"{self.following_user.username} followed {self.followed_user.username}"
+        
+
+@receiver(post_save, sender=Account)
+def user_save(sender, instance, *args, **kwargs):
+    FriendList.objects.get_or_create(user=instance)

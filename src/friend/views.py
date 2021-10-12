@@ -67,7 +67,7 @@ def friend_list(request: Any, user_id: int) -> HttpResponse:
 @login_required
 def accept_request(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
-    
+    Accepts the friend request sent from the user with the given user_id to the request user.
     """
     context = {}
 
@@ -83,11 +83,10 @@ def accept_request(request: Any, user_id: int) -> Union[HttpResponse, HttpRespon
         return redirect(destination)
     return redirect("account:profile", user_id=user_id)
     
-
 @login_required
 def decline_request(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
-    
+    Declines the friend request sent from the user with the given user_id to the request user.
     """
     context = {}
 
@@ -106,7 +105,7 @@ def decline_request(request: Any, user_id: int) -> Union[HttpResponse, HttpRespo
 @login_required
 def cancel_request(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
-    
+    Cancels the friend request sent from the request user to the user with the given user_id.
     """
     context = {}
 
@@ -132,7 +131,8 @@ def cancel_request(request: Any, user_id: int) -> Union[HttpResponse, HttpRespon
 @login_required
 def create_request(request: Any, user_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
-    
+    Trys to reactivate a friend request sent from the request user to the user with the given user_id.
+    If there is no Friend Request, it creates a new one.
     """
     context = {}
 
