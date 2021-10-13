@@ -46,6 +46,8 @@ def private_chat(request: Any, chat_id: int, *args, **kwargs) -> HttpResponse:
 
     messages = sorted(PrivateMessage.objects.filter(chat_room=chat).all(), key=lambda msg: msg.pk)
     context["messages"] = messages[-100:]
+    context["room_name"] = chat.room_name
+    context["chat_id"] = chat_id
 
     if len(messages) > 200:
         PrivateMessage.objects.filter(pk__in=list(map(lambda msg: msg.pk, messages)[:-200])).all().delete()
@@ -71,3 +73,14 @@ def create_private_chat(request: Any) -> HttpResponse:
     context["what"] = "private"
 
     return render(request, "chat/chat_creation.html", context)
+
+@login_required
+def chat_overview(request: Any) -> HttpResponse:
+    """
+    Returns a list view with all private chats of the request user.
+    """
+    context = {}
+    context["user"] = request.user
+    context["chat_list"] = request.user.private_chats.all()
+
+    return render(request, "chat/chat_overview.html", context)

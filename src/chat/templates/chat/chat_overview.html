@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Chat overview{% endblock title %}
+
+{% block content %}
+<style>
+    
+    #id_chat_profile_img {
+        border-radius: 50%;
+        vertical-align: middle;
+    }
+    #id_chat_username {
+        vertical-align: middle;
+        display: inline;
+    }
+</style>
+
+<br>
+<div class="container">
+    <div class="card text-white bg-dark">
+        <div class="card-header"><p>Chat overview</p></div>
+        <div class="card-body">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="{% url 'chat:public_chat' %}" style="text-decoration: none; color: var(--main-text-color);">
+                    <div class="card text-white bg-dark">
+                        <div class="card-header">
+                            <h6 class="card-text" id="id_chat_username">Public Chat</h6>
+                        </div>
+                    </div>
+                </a>
+            </div>
+            {% for chat in chat_list %}
+                <div class="d-flex justify-content-between align-items-center">
+                    <a href="{% url 'chat:private_chat' chat_id=chat.pk %}" style="text-decoration: none; color: var(--main-text-color);">
+                        <div class="card text-white bg-dark">
+                            <div class="card-header">
+                                <h6 class="card-text" id="id_chat_username">{{chat.room_name}}</h6>
+                            </div>
+                        </div>
+                    </a>
+                    <div class="card-text">
+                        <small class="text-muted">Chat exists since {{chat.date_created}} (UTC)</small>
+                    </div>
+                </div>
+            {% empty %}
+                <p>No Private Chats :((</p>
+            {% endfor %}
+            <div class="card-footer" align="center">
+                No more Chats...
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

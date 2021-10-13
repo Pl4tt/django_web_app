@@ -29,7 +29,8 @@ class ChatRoomCreationForm(forms.ModelForm):
         return chat_room
 
     def clean_room_name(self):
-        room_name = self.cleaned_data["room_name"].lower()
+        room_name = self.cleaned_data["room_name"].lower().strip().replace(" ", "_")
+        room_name = "".join([char for char in room_name if char.isalpha() or char in "-_"])
         try:
             PrivateChatRoom.objects.get(room_name=room_name)
         except PrivateChatRoom.DoesNotExist:

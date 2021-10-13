@@ -11,11 +11,7 @@
 
     const user_username = JSON.parse(document.getElementById("user_username").textContent);
 	const chatarea = document.querySelector("#id_chat_content");
-    const chatSocket = new WebSocket(
-        "ws://" +
-        window.location.host +
-        "/ws/chat/public/"
-    )
+    const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/public/`)
 
 	function scrollBottom() {
 		chatarea.scrollTop = chatarea.scrollHeight;

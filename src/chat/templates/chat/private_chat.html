@@ -1,0 +1,47 @@
+{% extends "chat/chat.html" %}
+{% block title %}{{room_name}}{% endblock %}
+
+{% block script %}
+
+{{ room_name|json_script:"room_name" }}
+{{ chat_id|json_script:"chat_id" }}
+{{ request.user.username|json_script:"user_username" }}
+<script>
+
+    const user_username = JSON.parse(document.getElementById("user_username").textContent);
+    const room_name = JSON.parse(document.getElementById("room_name").textContent);
+    const chat_id = JSON.parse(document.getElementById("chat_id").textContent);
+    console.log(room_name);
+	const chatarea = document.querySelector("#id_chat_content");
+    const chatSocket = new WebSocket(`ws://${window.location.host}/ws/chat/private/${chat_id}/`)
+
+	function scrollBottom() {
+		chatarea.scrollTop = chatarea.scrollHeight;
+	}
+	scrollBottom();
+
+
+    function sendMessage() {
+        const messageInput = document.querySelector("#id_message_input");
+        const message = messageInput.value;
+
+        chatSocket.send(JSON.stringify({
+            "message": message,
+            "username": user_username,
+        }))
+        messageInput.value = "";
+		return false;
+
+    }
+
+
+    chatSocket.onmessage = function(e) {
+        const data = JSON.parse(e.data);
+        if (data.message) {
+            chatarea.value += (data.username + ": " + data.message + "\n");
+			scrollBottom();
+        }
+    }
+</script>
+
+{% endblock script %}

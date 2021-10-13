@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model
 
 
 class PrivateChatRoom(models.Model):
-    room_name = models.CharField(max_length=255, unique=True)
+    room_name = models.CharField(max_length=100, unique=True)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, verbose_name="owner", related_name="owning_chats", on_delete=models.CASCADE, null=True)
     administrators = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="private_admin_chats")
     allowed_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="private_chats", blank=True)
