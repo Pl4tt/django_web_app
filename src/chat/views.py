@@ -68,5 +68,6 @@ def create_private_chat(request: Any) -> HttpResponse:
             context["invalid_form"] = form
 
     context["users"] = get_user_model().objects.exclude(pk=request.user.pk).all()
+    context["what"] = "private"
 
     return render(request, "chat/chat_creation.html", context)
