@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Edit {{what.title}} Chat{% endblock title %}
+
+{% block content %}
+
+<div class="container" align="center">
+    <form method="POST">
+        {% csrf_token %}
+        <br>
+        <div class="form-floating">
+            <input name="room_name" type="text" class="form-control custom-dark-input" value="{{chat.room_name}}" id="id_room_name" placeholder="Room Name">
+            <label for="id_room_name">Room Name</label>
+        </div>
+        <br>
+        <label for="id_allowed_users"><h4>Chat member:</h4></label>
+        <select name="allowed_users" class="form-select" id="id_allowed_users" multiple>
+            {% for user in users %}
+                {% if user in chat.allowed_users.all %}
+                    <option selected="selected" value="{{user.pk}}">{{user.username}}</option>
+                {% else %}
+                    <option value="{{user.pk}}">{{user.username}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <br>
+        <label for="id_admin_users"><h4>Administrators:</h4></label>
+        <select name="administrators" class="form-select" id="id_admin_users" multiple>
+            {% for user in chat.allowed_users.all %}
+                {% if user in chat.administrators.all %}
+                    <option selected="selected" value="{{user.pk}}">{{user.username}}</option>
+                {% else %}
+                    <option value="{{user.pk}}">{{user.username}}</option>
+                {% endif %}
+            {% endfor %}
+        </select>
+        <br>
+        {% for field in invalid_form %}
+            <p>
+            {% for error in field.errors %}
+                <p style="color: red;">{{ error }}</p>
+            {% endfor %}
+            </p>
+        {% endfor %}
+        {% if invalid_form.non_field_errors %}
+            <div style="color: red;">
+            <p>{{invalid_form.non_field_errors}}</p>
+            </div>
+        {% endif %}
+        <br>
+        <button class="btn btn-primary btn-lg" type="submit">Submit Changes</button>
+    </form>
+    {% if request.user == chat.owner %}
+    <br>
+    <p style="color: red;">DANGER ZONE</p>
+    <a href="{% url 'chat:delete_private_chat' chat_id=chat.pk %}" class="btn btn-danger">Delete Chatroom</a>
+    {% endif %}
+</div>
+
+{% endblock content %}

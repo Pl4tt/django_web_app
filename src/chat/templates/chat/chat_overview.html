@@ -19,6 +19,9 @@
     <div class="card text-white bg-dark">
         <div class="card-header"><p>Chat overview</p></div>
         <div class="card-body">
+            <div align="center">
+                <a href="{% url 'chat:create_private_chat' %}" class="btn btn-primary btn-lg">Create Chat</a>
+            </div>
             <div class="d-flex justify-content-between align-items-center">
                 <a href="{% url 'chat:public_chat' %}" style="text-decoration: none; color: var(--main-text-color);">
                     <div class="card text-white bg-dark">

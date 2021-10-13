@@ -80,6 +80,10 @@ class Account(AbstractBaseUser):
     def has_module_perms(self, app_label):
         return True
 
+@receiver(post_save, sender=Account)
+def user_save(sender, instance, *args, **kwargs):
+    FriendList.objects.get_or_create(user=instance)
+    
 
 class Follow(models.Model):
     following_user = models.ForeignKey(Account, related_name="following", on_delete=models.CASCADE)
@@ -89,7 +93,3 @@ class Follow(models.Model):
     def __str__(self):
         return f"{self.following_user.username} followed {self.followed_user.username}"
         
-
-@receiver(post_save, sender=Account)
-def user_save(sender, instance, *args, **kwargs):
-    FriendList.objects.get_or_create(user=instance)

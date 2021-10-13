@@ -1,6 +1,10 @@
+from collections.abc import Iterable
+
 from django.db import models
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 
@@ -35,14 +39,12 @@ class PrivateChatRoom(models.Model):
 
         self.save()
 
-    def add_users(self, users: list[settings.AUTH_USER_MODEL]):
+    def add_users(self, users: Iterable[settings.AUTH_USER_MODEL]):
         """
         Adds all given users to the allowed users if not already.
         """
         for user in users:
             self.add_user(user)
-
-        self.save()
 
     def remove_user(self, user: settings.AUTH_USER_MODEL):
         """
@@ -50,6 +52,14 @@ class PrivateChatRoom(models.Model):
         """
         if self.check_user(user):
             self.allowed_users.remove(user)
+            
+        if self.check_admin(user):
+            self.remove_administrator(user)
+            
+        if user == self.owner:
+            self.owner = self.administrators.all()[0]
+
+        self.save()
         
     def add_administrator(self, user: settings.AUTH_USER_MODEL):
         """
