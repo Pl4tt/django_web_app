@@ -19,13 +19,15 @@
 		border-bottom: 2px solid var(--bs-blue);
 	}
 </style>
-
 <div class="container">
 	<div class="row d-flex justify-content-center">
 		<div class="col-9">
 			<form onsubmit="return sendMessage();">
 				<div class="form-group">
-					<label for="id_chat_content" id="id_chat_content_label" class="h4 pt-5">{% block chat_name %}{% endblock chat_name %}</label>
+					<label for="id_chat_content" id="id_chat_content_label" class="h4 pt-5">
+						<a href="{% url 'chat:chat_overview' %}" class="btn btn-primary">Chat Overview</a>
+						{% block chat_name %}{% endblock chat_name %}
+					</label>
 					<textarea
 						class="form-control shadow-lg p-3 mb-5"
 						id="id_chat_content"
