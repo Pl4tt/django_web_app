@@ -90,7 +90,7 @@ def chat_overview(request: Any) -> HttpResponse:
 @login_required
 def edit_private_chat(request: Any, chat_id: int) -> Union[HttpResponse, HttpResponseRedirect]:
     """
-    
+    Edits the given chatroom to the posted data if the user is authenticated.
     """
     context = {}
 
