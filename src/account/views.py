@@ -62,6 +62,9 @@ def login_view(request: Any, *args, **kwargs) -> Union[HttpResponse, HttpRespons
             account = authenticate(email=email, password=password)
             if account:
                 login(request, account)
+                
+                if "next" in request.GET:
+                    return redirect(request.GET.get("next"))
                 return redirect("posts:home")
         else:
             context["invalid_form"] = form

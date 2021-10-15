@@ -34,6 +34,9 @@
             </div>
         {% endif %}
         <button class="btn btn-primary" type="submit">Login</button>
+        {% if request.POST.next %}
+            <input type="hidden" name="next", value="{{ request.GET.next }}">
+        {% endif %}
     </form>
     <br>
     <a href="{% url 'account:register' %}">Don't have an account yet?</a>
