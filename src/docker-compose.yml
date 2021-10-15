@@ -1,0 +1,41 @@
+version: "3.8"
+
+services:
+
+  # Postgres database
+  db:
+    image: postgres
+    restart: always
+    volumes: 
+      - ./storage/postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=django_web_app
+      - POSTGRES_USER=django
+      - POSTGRES_PASSWORD=password
+    container_name: postgres_db
+    ports:
+      - "5432:5432"
+
+  # redis
+  redis:
+    image: redis
+    restart: always
+    container_name: redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./storage/redis/data:/data
+      
+  # Django Application
+  app:
+    build: .
+    volumes:
+      - .:/django
+    ports:
+      - "8000:8000"
+    image: app:django
+    container_name: django_app
+    command: python manage.py runserver 0.0.0.0:8000
+    depends_on:
+      - db
+      - redis
