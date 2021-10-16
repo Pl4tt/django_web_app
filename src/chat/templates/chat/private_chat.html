@@ -1,5 +1,5 @@
 {% extends "chat/chat.html" %}
-{% block title %}{{room_name}}{% endblock %}
+{% block title %}{{room_name}} Chatroom{% endblock %}
 
 {% block chat_name %}{{room_name}} Chatroom
     {% if request.user in chat_room.administrators.all %}
@@ -46,6 +46,7 @@
         if (data.message) {
             chatarea.value += (data.username + ": " + data.message + "\n");
 			scrollBottom();
+            console.log(data.user_url)
         }
     }
 </script>

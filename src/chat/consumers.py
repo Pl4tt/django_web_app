@@ -2,6 +2,7 @@ import json
 from django.contrib.auth import get_user_model
 from channels.generic.websocket import AsyncWebsocketConsumer
 from asgiref.sync import sync_to_async
+from django.urls import reverse
 
 from .models import PublicMessage, PrivateChatRoom, PrivateMessage
 
@@ -59,20 +60,20 @@ class PrivatChatRoomConsumer(AsyncWebsocketConsumer):
                 "type": "chatroom_message",
                 "message": message,
                 "username": username,
+                "user_url": reverse("account:profile", kwargs={"user_id": self.user.pk}),
             }
         )
 
     async def chatroom_message(self, event):
         message = event["message"]
         username = event["username"]
+        user_url = event["user_url"]
 
         await self.send(json.dumps({
             "message": message,
             "username": username,
+            "user_url": user_url,
         }))
-            
-
-
 
 
 class PublicChatRoomConsumer(AsyncWebsocketConsumer):
