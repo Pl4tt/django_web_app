@@ -51,7 +51,6 @@ class PrivateChatUpdateForm(forms.ModelForm):
     def save(self, commit=True):
         chat_room = super(PrivateChatUpdateForm, self).save(commit=False)
         chat_room.room_name = self.cleaned_data["room_name"]
-        print(self.cleaned_data["administrators"])
         chat_room.administrators.set(self.cleaned_data["administrators"])
         chat_room.allowed_users.set(self.cleaned_data["allowed_users"])
 
