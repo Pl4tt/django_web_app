@@ -13,7 +13,7 @@ RUN mkdir -p /vol/static/static && \
     mkdir -p /vol/static/media && \
     mkdir -p /vol/static/temp && \
     chmod -R 755 /vol && \
-    python manage.py collectstatic
+    python manage.py collectstatic --noinput
+
 
 USER root
-
