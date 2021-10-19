@@ -9,9 +9,9 @@ services:
     volumes: 
       - ./storage/postgres-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_DB=django_web_app
-      - POSTGRES_USER=django
-      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
     container_name: postgres_db
     ports:
       - "5432:5432"
@@ -36,6 +36,7 @@ services:
     image: app:django
     container_name: django_app
     command: python manage.py runserver 0.0.0.0:8000
+    restart: always
     depends_on:
       - db
       - redis
