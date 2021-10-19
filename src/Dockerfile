@@ -8,3 +8,12 @@ COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
 
 COPY . .
+
+RUN mkdir -p /vol/static/static && \
+    mkdir -p /vol/static/media && \
+    mkdir -p /vol/static/temp && \
+    chmod -R 755 /vol && \
+    python manage.py collectstatic
+
+USER root
+
