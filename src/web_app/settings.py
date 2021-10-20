@@ -28,7 +28,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 AUTH_USER_MODEL = "account.Account"
@@ -145,8 +145,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "media"),
 ]
 
-STATIC_URL = '/static/'
-MEDIA_URL = "/media/"
+STATIC_URL = '/static/static/'
+MEDIA_URL = "/static/media/"
 
 if DEBUG:
     STATIC_ROOT = os.path.join(BASE_DIR, "static_cdn")
@@ -155,7 +155,7 @@ if DEBUG:
 else:
     STATIC_ROOT = "/vol/static/static"
     MEDIA_ROOT = "/vol/static/media"
-    TEMP = "/vol/static/temp"
+    TEMP = "/vol/static/media/temp"
 
 BASE_URL = "http://127.0.0.1:8000"
 

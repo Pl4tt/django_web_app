@@ -36,8 +36,19 @@ services:
       - "8000:8000"
     image: app:django
     container_name: django_app
-    command: python manage.py runserver 0.0.0.0:8000
     restart: always
     depends_on:
       - db
       - redis
+
+  # Nginx Proxy
+  proxy:
+    build:
+      context: ./nginx
+    restart: always
+    volumes:
+      - ./storage/static:/vol/static
+    ports:
+      - "80:80"
+    depends_on:
+      - app
