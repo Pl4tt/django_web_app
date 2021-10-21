@@ -41,11 +41,28 @@ services:
       - db
       - redis
 
+  # Django ASGI Application
+  asgi_app:
+    build: .
+    volumes:
+      - .:/django
+    ports:
+      - "9000:9000"
+    restart: always
+    environment:
+      - DJANGO_SETTINGS_MODULE=web_app.settings
+    container_name: django_asgi_app
+    command: daphne -b 0.0.0.0 -p 9000 web_app.routing:application
+    depends_on:
+      - db
+      - redis
+
   # Nginx Proxy
   proxy:
     build:
       context: ./nginx
     restart: always
+    container_name: nginx_proxy
     volumes:
       - ./storage/static:/vol/static
     ports:
