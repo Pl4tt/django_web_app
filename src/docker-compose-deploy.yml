@@ -53,6 +53,7 @@ services:
       - DJANGO_SETTINGS_MODULE=web_app.settings
     container_name: django_asgi_app
     command: daphne -b 0.0.0.0 -p 9000 web_app.routing:application
+    image: asgi_app:django
     depends_on:
       - db
       - redis
@@ -69,3 +70,4 @@ services:
       - "80:80"
     depends_on:
       - app
+      - asgi_app
