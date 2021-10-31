@@ -91,6 +91,10 @@
                             <a id="id_comment_author_link" href="{% url 'account:profile' user_id=comment.author.pk %}">
                                 <img id="id_comment_author_profile_img" src="{{ comment.author.profile_image.url }}" alt="Logo" width="20px" height="20px">
                                 <p id="id_comment_author_username">{{ comment.author.username }}: {{ comment.content }}</p>
+                                {% if request.user == comment.author or request.user == comment.post.author %}
+                                    <br/>
+                                    <a class="btn btn-danger btn-sm" href="{% url 'posts:delete_comment' comment_id=comment.pk %}">Delete Comment</a>
+                                {% endif %}
                             </a>
                         </div>
                         <small class="text-muted">{{comment.date_created|naturaltime}}</small>
@@ -157,6 +161,7 @@
 
                 var breakElement = document.createElement("br")
                 var breakElement2 = document.createElement("br")
+                var breakElement3 = document.createElement("br")
 
                 var footerText = document.createElement("small")
                 footerText.setAttribute("class", "text-muted")
@@ -179,15 +184,22 @@
                 var authorUsernameContent = document.createElement("p")
                 authorUsernameContent.setAttribute("id", "id_comment_author_username")
                 authorUsernameContent.innerHTML = `${data["comment_author_username"]}: ${data["comment_content"]}`
-                    
+
+                var deleteButton = document.createElement("a")
+                deleteButton.setAttribute("class", "btn btn-danger btn-sm")
+                deleteButton.setAttribute("href", "{% url 'posts:delete_comment' comment_id=1234 %}".replace("1234", data["comment_pk"]))
+                deleteButton.innerHTML = "Delete Comment"
+            
                 authorLink.appendChild(authorImage)
                 authorLink.appendChild(authorUsernameContent)
                 authorSection.appendChild(authorLink)
                 commentHolder.appendChild(authorSection)
+                commentHolder.appendChild(deleteButton)
+                commentHolder.appendChild(breakElement)
 
                 commentHolder.appendChild(footerText)
-                commentHolder.appendChild(breakElement)
                 commentHolder.appendChild(breakElement2)
+                commentHolder.appendChild(breakElement3)
 
                 allCommentHolder.insertBefore(commentHolder, allCommentHolder.firstChild)
             })

@@ -140,6 +140,7 @@ def comment_post(request: Any, post_id: int, comment_content: str) -> Union[Json
 
     json_data = {
         "comment_count": len(post.comments.all()),
+        "comment_pk": comment.pk,
         "comment_content": comment.content,
         "comment_author_username": comment.author.username,
         "comment_author_pk": comment.author.pk,
@@ -148,6 +149,30 @@ def comment_post(request: Any, post_id: int, comment_content: str) -> Union[Json
     }
 
     return JsonResponse(json_data)
+
+@login_required
+def delete_comment(request: Any, comment_id: int) -> Union[HttpResponseRedirect, HttpResponse]:
+    """
+    Deletes the given post if request user is authenticated to do that.
+    """
+    comment = Comment.objects.filter(id=comment_id).first()
+    if not comment:
+        return render(request, "error.html", {
+            "error_message": "Comment you tried to delete doesn't exist."
+        })
+    
+    if request.user != comment.author and request.user != comment.post.author:
+        return render(request, "error.html", {
+            "error_message": "You are not allowed to delete someone else's comment."
+        })
+    
+    comment.delete()
+    
+    destination = get_past_position(request)
+    if destination:
+        return redirect(destination)
+    return redirect("posts:home")
+
 
 @login_required
 def edit_post(request: Any, post_id: int, new_post_content: str) -> Union[JsonResponse, HttpResponse, HttpResponseRedirect]:
