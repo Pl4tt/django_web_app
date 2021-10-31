@@ -6,6 +6,10 @@
         <a href="{% url 'chat:edit_private_chat' chat_id=chat_id %}" class="btn btn-primary">Edit</a>
     {% endif %}
     <a href="{% url 'chat:leave_private_chat' chat_id=chat_id %}" class="btn btn-danger">Leave</a>
+    <span style="color: red;">
+        <p id="id_connected_users_count" style="display: inline;">0</p>
+        <span class="material-icons m-auto pr-1">person_outline</span>
+    </span>
 {% endblock chat_name %}
 
 {% block script %}
