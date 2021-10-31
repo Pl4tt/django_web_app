@@ -57,6 +57,11 @@
 		</footer>
 
 		<script>
+			var theme = localStorage.getItem("theme");
+			if (theme == null) {
+				localStorage.setItem("theme", "dark");
+			}
+
 			function displayLoadingSpinner(isDisplayed) {
 				var spinner = document.getElementById("id_loading_spinner");
 				if (isDisplayed) {

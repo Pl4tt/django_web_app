@@ -64,6 +64,7 @@ services:
       context: ./nginx
     restart: always
     container_name: nginx_proxy
+    image: proxy:nginx
     volumes:
       - ./storage/static:/vol/static
     ports:

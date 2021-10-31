@@ -66,9 +66,6 @@
                     <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="id_option_dropdown">
                         <li><button class="dropdown-item" onclick="editPost({{post.0.pk}});">Edit</button></li>
                         <li><a class="dropdown-item" href="{% url 'posts:delete_post' post_id=post.0.pk %}">Delete</a></li>
-                        <li><a class="dropdown-item" href="#">Something else here</a></li>
-                        <li><hr class="dropdown-divider"></li>
-                        <li><a class="dropdown-item" href="#">Separated link</a></li>
                     </ul>
                 </div>
             {% endif %}
