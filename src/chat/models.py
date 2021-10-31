@@ -14,9 +14,24 @@ class PrivateChatRoom(models.Model):
     administrators = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="private_admin_chats")
     allowed_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="private_chats", blank=True)
     date_created = models.DateTimeField(auto_now_add=True)
+    connected_users = models.ManyToManyField(settings.AUTH_USER_MODEL, related_name="connected_chats", blank=True)
 
     def __str__(self):
         return f"{self.room_name}"
+
+    def join(self, user: settings.AUTH_USER_MODEL) -> None:
+        """Adds the given user to the connected users"""
+        if not self.is_connected(user):
+            self.connected_users.add(user)
+
+    def leave(self, user: settings.AUTH_USER_MODEL) -> None:
+        """Removes the given user from the connected users"""
+        if self.is_connected(user):
+            self.connected_users.remove(user)
+
+    def is_connected(self, user: settings.AUTH_USER_MODEL) -> bool:
+        """Returns True if given user is connected"""
+        return user in self.connected_users.all()
     
     def check_user(self, user: settings.AUTH_USER_MODEL) -> bool:
         """

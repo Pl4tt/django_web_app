@@ -25,6 +25,10 @@
 			<form onsubmit="return sendMessage();">
 				<div class="form-group">
 					<label for="id_chat_content" id="id_chat_content_label" class="h4 pt-5">
+						<span style="color: red;">
+							<p id="id_connected_users_count" style="display: inline;">0</p>
+							<span class="material-icons m-auto pr-1">person_outline</span>
+						</span>
 						<a href="{% url 'chat:chat_overview' %}" class="btn btn-primary">Chat Overview</a>
 						{% block chat_name %}{% endblock chat_name %}
 					</label>

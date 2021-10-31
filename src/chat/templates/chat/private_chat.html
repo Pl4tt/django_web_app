@@ -21,12 +21,12 @@
 	const chatarea = document.querySelector("#id_chat_content");
     var chatSocket_protocol = window.location.protocol == "https:" ? "wss" : "ws";
     const chatSocket = new WebSocket(`${chatSocket_protocol}://${window.location.host}/ws/chat/private/${chat_id}/`)
+    const connected_users_count = document.querySelector("#id_connected_users_count");
 
 	function scrollBottom() {
 		chatarea.scrollTop = chatarea.scrollHeight;
 	}
 	scrollBottom();
-
 
     function sendMessage() {
         const messageInput = document.querySelector("#id_message_input");
@@ -44,9 +44,20 @@
 
     chatSocket.onmessage = function(e) {
         const data = JSON.parse(e.data);
-        if (data.message) {
+
+        if (data.command === "send_message" && data.message) {
             chatarea.value += (data.username + ": " + data.message + "\n");
 			scrollBottom();
+        }
+        if (data.command === "join_room") {
+            chatarea.value += (`SYSTEM: ${data.username} is now online in this chat :)\n\n`);
+            connected_users_count.innerHTML = data.connected_users_count;
+            scrollBottom();
+        }
+        if (data.command === "leave_room") {
+            chatarea.value += (`SYSTEM: ${data.username} went away of this chat :(\n\n`);
+            connected_users_count.innerHTML = data.connected_users_count;
+            scrollBottom();
         }
     }
 </script>

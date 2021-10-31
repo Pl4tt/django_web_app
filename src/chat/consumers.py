@@ -5,6 +5,7 @@ from asgiref.sync import sync_to_async
 from django.urls import reverse
 
 from .models import PublicMessage, PrivateChatRoom, PrivateMessage
+from .constants import CMD_JOIN_ROOM, CMD_LEAVE_ROOM, CMD_SEND_MESSAGE
 
 
 
@@ -33,6 +34,18 @@ class PrivatChatRoomConsumer(AsyncWebsocketConsumer):
         )
         await self.accept()
 
+        if not await sync_to_async(self.chat_room.is_connected, thread_sensitive=True)(self.user):
+            await sync_to_async(self.chat_room.join, thread_sensitive=True)(self.user)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "system_message",
+                    "command": CMD_JOIN_ROOM,
+                    "username": self.user.username,
+                    "connected_users_count": await sync_to_async(len, thread_sensitive=True)(await sync_to_async(self.chat_room.connected_users.all, thread_sensitive=True)()),
+                }
+            )
 
     async def disconnect(self, close_code):
         await self.channel_layer.group_discard(
@@ -40,6 +53,18 @@ class PrivatChatRoomConsumer(AsyncWebsocketConsumer):
             self.channel_name,
         )
 
+        if await sync_to_async(self.chat_room.is_connected, thread_sensitive=True)(self.user):
+            await sync_to_async(self.chat_room.leave, thread_sensitive=True)(self.user)
+
+            await self.channel_layer.group_send(
+                self.room_group_name,
+                {
+                    "type": "system_message",
+                    "command": CMD_LEAVE_ROOM,
+                    "username": self.user.username,
+                    "connected_users_count": await sync_to_async(len, thread_sensitive=True)(await sync_to_async(self.chat_room.connected_users.all, thread_sensitive=True)()),
+                }
+            )
 
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
@@ -58,6 +83,7 @@ class PrivatChatRoomConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             {
                 "type": "chatroom_message",
+                "command": CMD_SEND_MESSAGE,
                 "message": message,
                 "username": username,
                 "user_url": reverse("account:profile", kwargs={"user_id": self.user.pk}),
@@ -65,14 +91,27 @@ class PrivatChatRoomConsumer(AsyncWebsocketConsumer):
         )
 
     async def chatroom_message(self, event):
+        command = event["command"]
         message = event["message"]
         username = event["username"]
         user_url = event["user_url"]
 
         await self.send(json.dumps({
+            "command": command,
             "message": message,
             "username": username,
             "user_url": user_url,
+        }))
+
+    async def system_message(self, event):
+        command = event["command"]
+        username = event["username"]
+        connected_users_count = event["connected_users_count"]
+
+        await self.send(json.dumps({
+            "command": command,
+            "username": username,
+            "connected_users_count": connected_users_count,
         }))
 
 
