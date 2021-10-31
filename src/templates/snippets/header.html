@@ -52,23 +52,23 @@
 			{% if request.user.is_authenticated %}
 			<!-- Chat overview Button -->
 			<div class="btn-group">
-				<button class="btn btn-dark">
-					<a style="text-decoration: none; color: var(--main-text-color);" href="{% url 'posts:create_post' %}">
+				<a style="text-decoration: none; color: var(--main-text-color);" href="{% url 'posts:create_post' %}">
+					<button class="btn btn-dark">
 						<span class="material-icons">
 							post_add
 						</span>
-					</a>
-				</button>
+					</button>
+				</a>
 			</div>
 			<!-- Post Button -->
 			<div class="btn-group">
-				<button class="btn btn-dark">
-					<a style="text-decoration: none; color: var(--main-text-color);" href="{% url 'chat:chat_overview' %}">
+				<a style="text-decoration: none; color: var(--main-text-color);" href="{% url 'chat:chat_overview' %}">
+					<button class="btn btn-dark">
 						<span class="material-icons">
 							chat
 						</span>
-					</a>
-				</button>
+					</button>
+				</a>
 			</div>
 			<!-- Profile Picture Dropdown -->
 			<div class="btn-group dropstart" id="id_resize_event_class_change" role="group">
