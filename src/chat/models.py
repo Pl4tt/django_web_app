@@ -72,7 +72,14 @@ class PrivateChatRoom(models.Model):
             self.remove_administrator(user)
             
         if user == self.owner:
-            self.owner = self.administrators.all()[0]
+            if self.administrators.all():
+                self.owner = self.administrators.first()
+            elif self.allowed_users.all():
+                self.add_administrator(self.allowed_users.first())
+                self.owner = self.allowed_users.first()
+            else:
+                self.delete()
+                return
 
         self.save()
         
