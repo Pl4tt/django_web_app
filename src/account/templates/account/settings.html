@@ -63,6 +63,7 @@
                             <span id="id_theme_toggle_icon" class="material-icons">
                                 dark_mode
                             </span>
+                            <p style="color: red">WARNING: light mode is currently in development (pretty ugly).</p>
                         </label>
                     </div>               
                 </div>
@@ -92,6 +93,12 @@
 
     function switchStyle(style) {
         localStorage.setItem("theme", style);
+
+        if (style == "light") {
+            lightStyle();
+        } else {
+            darkStyle();
+        }
     }
 </script>
 
