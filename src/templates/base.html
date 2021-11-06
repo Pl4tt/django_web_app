@@ -50,7 +50,7 @@
 			}
 		</style>
 
-		<div class="main">{% block content %} {% endblock content %}</div>
+		<main class="main">{% block content %} {% endblock content %}</main>
 
 		<footer>
 			{% include "snippets/footer.html" %}
@@ -66,6 +66,7 @@
 			const bsDark = "--bs-dark";
 			const darkVar = "--dark";
 			const bsDarkRgb = "--bs-dark-rgb";
+			const bsWhiteRgb = "--bs-white-rgb";
 
 			var theme = localStorage.getItem("theme");
 			
@@ -88,6 +89,13 @@
 				document.documentElement.style.setProperty(bsDark, "#212529");
 				document.documentElement.style.setProperty(darkVar, "#343a40");
 				document.documentElement.style.setProperty(bsDarkRgb, "33,37,41");
+				document.documentElement.style.setProperty(bsWhiteRgb, "255,255,255");
+				
+				var allDarkElements = document.querySelectorAll(".btn-light");
+
+				for (let i of allDarkElements) {
+					i.className = i.className.replace("btn-light", "btn-dark");
+				}
 			}
 
 			function lightStyle() {
@@ -99,7 +107,14 @@
 				document.documentElement.style.setProperty(bsGray900, "#f8f9fa");
 				document.documentElement.style.setProperty(bsDark, "#f8f9fa");
 				document.documentElement.style.setProperty(darkVar, "#495057");
-				document.documentElement.style.setProperty(bsDarkRgb, "96,96,96");
+				document.documentElement.style.setProperty(bsDarkRgb, "255,255,255");
+				document.documentElement.style.setProperty(bsWhiteRgb, "64,64,64");
+				
+				var allDarkElements = document.querySelectorAll(".btn-dark");
+
+				for (let i of allDarkElements) {
+					i.className = i.className.replace("btn-dark", "btn-light");
+				}
 			}
 
 			function displayLoadingSpinner(isDisplayed) {
