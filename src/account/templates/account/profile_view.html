@@ -2,6 +2,15 @@
 {% block title %}Profile of {{user.username}}{% endblock title %}
 {% load static %}
 
+{% block meta %}
+<meta name="description" content="Profile of {{user.username}}.">
+<meta name="keywords" content="Chat, Post, Interaction, Accounts, Profiles, Social Media, {{user.username}}">
+
+<meta name="og:title" content="{{user.username}}">
+<meta name="og:image" content="{{user.profile_image.url}}">
+<meta name="og:url" content="{% url 'account:profile' user_id=user.pk %}">
+{% endblock meta %}
+
 {% block content %}
 <br>
 <div class="card-group justify-content-center">

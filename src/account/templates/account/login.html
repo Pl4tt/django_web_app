@@ -2,6 +2,16 @@
 {% block title %}Login{% endblock title %}
 {% load static %}
 
+{% block meta %}
+<link rel="shortcut icon" type="image/png" href="{% static 'pictures/default_profile_image.png' %}">
+
+<meta name="description" content="Login">
+<meta name="keywords" content="Chat, Login, Post, Interaction, Accounts, Profiles, Social Media">
+
+<meta name="og:title" content="Login">
+<meta name="og:image" content="{% static 'pictures/default_profile_image.png' %}">
+<meta name="og:url" content="{% url 'account:login' %}">
+{% endblock meta %}
 
 {% block content %}
 <div class="container" align="center">

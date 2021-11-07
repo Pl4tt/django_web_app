@@ -4,17 +4,15 @@
 		<meta charset="UTF-8" />
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		{% block meta %}
-		<meta name="description" content="This is a Website where you can chat and interact with other people and post things of your live.">
-		<meta name="keywords" content="Chat, Post, Interaction, Accounts, Profiles, Social Media">
 		<meta name="author" content="Dario Patt">
+		<meta name="og:type" content="website">
+
+		{% block meta %}
+		<meta name="keywords" content="Chat, Post, Interaction, Accounts, Profiles, Social Media">
 
 		<meta name="og:title" content="BlogChat">
 		<meta name="og:description" content="An interactive website with chats, posts and much more...">
-		<meta name="og:image" content="">
 		<meta name="og:url" content="{% url 'posts:home' %}">
-		<meta name="og:type" content="website">
-		
 		{% endblock meta %}
 		<link
 			href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css"
