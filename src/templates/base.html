@@ -48,7 +48,12 @@
 			}
 		</style>
 
-		<main class="main">{% block content %} {% endblock content %}</main>
+		<main class="main">
+			{% if not request.user.is_authenticated %}
+				<p style="color: red;">You first need to register/login to your account to get access to all features</p>
+			{% endif %}
+			{% block content %} {% endblock content %}
+		</main>
 
 		<footer>
 			{% include "snippets/footer.html" %}
