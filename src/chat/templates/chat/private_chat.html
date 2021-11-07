@@ -23,7 +23,7 @@
     const room_name = JSON.parse(document.getElementById("room_name").textContent);
     const chat_id = JSON.parse(document.getElementById("chat_id").textContent);
 	const chatarea = document.querySelector("#id_chat_content");
-    var chatSocket_protocol = window.location.protocol == "https:" ? "wss" : "ws";
+    var chatSocketProtocol = window.location.protocol == "https:" ? "wss" : "ws";
     const chatSocket = new WebSocket(`${chatSocket_protocol}://${window.location.host}/ws/chat/private/${chat_id}/`)
     const connected_users_count = document.querySelector("#id_connected_users_count");
 
