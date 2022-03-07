@@ -1,2 +1,6 @@
 src/.env
 src/storage/
+
+# python
+__pycache__/
+migrations/
